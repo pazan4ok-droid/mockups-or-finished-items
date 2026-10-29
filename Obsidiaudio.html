@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0C0F">
 <title>Obsidiaudio — голосовой интеллект</title>
-<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Obsidiaudio">
+<meta name="application-name" content="Obsidiaudio">
+<link rel="manifest" id="manifest-link" href="data:application/manifest+json,%7B%7D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@400;500&display=swap">
@@ -92,8 +97,47 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media (min-width:768px){.hero{margin-top:56px}.trigger{min-height:260px}}
 </style>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230B0C0F'/%3E%3Ctext x='50' y='65' font-family='Bebas Neue, Montserrat' font-size='55' fill='%23E8E3DA' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230B0C0F'/%3E%3Ctext x='50' y='65' font-family='Bebas Neue, Montserrat' font-size='55' fill='%23E8E3DA' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="icon" id="app-icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230B0C0F'/%3E%3Crect x='52' y='52' width='88' height='88' fill='none' stroke='%23E8E3DA' stroke-width='5'/%3E%3Crect x='74' y='74' width='44' height='44' fill='%23E8E3DA'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" id="app-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230B0C0F'/%3E%3Crect x='52' y='52' width='88' height='88' fill='none' stroke='%23E8E3DA' stroke-width='5'/%3E%3Crect x='74' y='74' width='44' height='44' fill='%23E8E3DA'/%3E%3C/svg%3E">
+<script>
+/* PWA: манифест собирается во время загрузки, чтобы start_url, scope и id совпадали с реальным адресом страницы.
+   Иконки рисуются на canvas и подставляются как PNG data-URL (работает без внешних файлов). */
+(function () {
+  try {
+    function drawIcon(size) {
+      var c = document.createElement('canvas'); c.width = c.height = size;
+      var g = c.getContext('2d'); if (!g) return '';
+      g.fillStyle = '#0B0C0F'; g.fillRect(0, 0, size, size);          // сплошной фон: безопасно для maskable
+      var outer = size * 0.44, inner = size * 0.22, o = (size - outer) / 2, i = (size - inner) / 2;
+      g.strokeStyle = '#E8E3DA'; g.lineWidth = Math.max(2, size * 0.026);
+      g.strokeRect(o, o, outer, outer);
+      g.fillStyle = '#E8E3DA'; g.fillRect(i, i, inner, inner);
+      return c.toDataURL('image/png');
+    }
+    var icon192 = drawIcon(192), icon512 = drawIcon(512);
+    var iconLink = document.getElementById('app-icon'), touchLink = document.getElementById('app-touch-icon');
+    if (icon192 && iconLink) { iconLink.type = 'image/png'; iconLink.href = icon192; }
+    if (icon192 && touchLink) touchLink.href = icon192;
+    if (!/^https?:$/.test(location.protocol) || !icon512) return;      // манифест имеет смысл только на http(s)
+    var base = location.origin + location.pathname;
+    var scope = base.slice(0, base.lastIndexOf('/') + 1);
+    var manifest = {
+      id: base, name: 'Obsidiaudio — голосовой интеллект', short_name: 'Obsidiaudio',
+      description: 'Голосовые заметки: речь, расшифровка, структура, связи.',
+      lang: 'ru', dir: 'ltr', start_url: base, scope: scope,
+      display: 'standalone', display_override: ['standalone', 'minimal-ui'], orientation: 'portrait',
+      background_color: '#0B0C0F', theme_color: '#0B0C0F', categories: ['productivity', 'utilities'],
+      icons: [
+        { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any' },
+        { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+      ]
+    };
+    var blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    document.getElementById('manifest-link').href = URL.createObjectURL(blob);
+  } catch (err) { /* PWA-метаданные необязательны: приложение работает и без них */ }
+})();
+</script>
 </head>
 <body>
 <div class="app">
@@ -125,7 +169,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
     <section id="v-archive" class="view" hidden aria-label="Архив">
       <h1 class="nt" style="margin-top:36px">АРХИВ</h1>
       <div id="archiveList"></div>
-      <div class="sec" style="margin-top:32px"><button class="ghost" type="button" data-reset>Сбросить демо-данные</button></div>
+      <div class="sec" style="margin-top:32px;display:flex;flex-wrap:wrap;gap:10px"><button class="ghost" type="button" data-reset>Сбросить демо-данные</button><button class="ghost" type="button" id="installBtn" hidden>Установить приложение</button></div>
     </section>
   </main>
 </div>
@@ -510,13 +554,45 @@ App.init();
 })();
 </script>
 <script>
-    // Регистрация микро-сервис-воркера для разблокировки PWA-установки на Android
-    if ('serviceWorker' in navigator) {
-        const swCode = "self.addEventListener('fetch', function(event) {});";
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error:', err));
-    }
+/* Service Worker.
+   Браузер принимает воркер только как отдельный файл с того же http(s)-адреса: blob:/data:/inline-скрипты запрещены.
+   Поэтому воркер регистрируется из ./sw.js. Положите рядом с этим файлом sw.js со следующим содержимым:
+
+   const CACHE = 'obsidiaudio-v1';
+   self.addEventListener('install', e => {
+     e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./'])).then(() => self.skipWaiting()));
+   });
+   self.addEventListener('activate', e => {
+     e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+   });
+   self.addEventListener('fetch', e => {
+     if (e.request.method !== 'GET') return;
+     e.respondWith(fetch(e.request).then(res => {
+       if (res && res.ok && new URL(e.request.url).origin === location.origin) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
+       return res;
+     }).catch(() => caches.match(e.request).then(hit => hit || caches.match('./'))));
+   });
+*/
+(function () {
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(function () { /* sw.js не найден: приложение работает без офлайн-кэша */ });
+    });
+  }
+
+  /* Нативная установка: Chrome присылает beforeinstallprompt, когда страница признана устанавливаемой */
+  var deferredPrompt = null, installButton = document.getElementById('installBtn');
+  addEventListener('beforeinstallprompt', function (event) {
+    event.preventDefault(); deferredPrompt = event;
+    if (installButton) installButton.hidden = false;
+  });
+  if (installButton) installButton.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function () { deferredPrompt = null; installButton.hidden = true; });
+  });
+  addEventListener('appinstalled', function () { deferredPrompt = null; if (installButton) installButton.hidden = true; });
+})();
 </script>
 
 </body>
