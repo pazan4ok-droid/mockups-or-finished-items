@@ -20,9 +20,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
 [hidden]{display:none!important}
 .app{max-width:680px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
 .mast{padding:20px 0 14px;border-bottom:1px solid var(--t4)}
-.mast-row{display:flex;justify-content:space-between;align-items:flex-end}
+.mast-row{display:flex;align-items:flex-end}
 .brand{font:400 22px/1 var(--d);letter-spacing:.14em}
-.count{font:400 52px/.8 var(--d)}
 .sub{margin:10px 0 0;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
 .view.in{animation:rev .32s var(--e) both}
 @keyframes rev{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -96,7 +95,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
 <body>
 <div class="app">
   <header class="mast">
-    <div class="mast-row"><span class="brand">OBSIDIAUDIO</span><span class="count" id="count" aria-label="Количество заметок">00</span></div>
+    <div class="mast-row"><span class="brand">OBSIDIAUDIO</span></div>
     <p class="sub">Голосовой интеллект / Полевые заметки</p>
   </header>
   <main>
@@ -335,7 +334,6 @@ const ViewController = {
   renderList(root, limit) {
     root.replaceChildren();
     const notes = NoteManager.sorted().slice(0, limit);
-    $('#count').textContent = pad(NoteManager.list.length);
     if (!notes.length) { root.append(this.empty('ЗАМЕТОК ПОКА НЕТ.', 'Ваша первая мысль появится здесь.')); return; }
     notes.forEach(n => {
       const b = el('button', 'row'); b.type = 'button'; b.dataset.open = n.id;
