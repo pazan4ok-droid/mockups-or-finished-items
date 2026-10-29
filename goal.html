@@ -251,5 +251,16 @@ if(navigator.storage&&navigator.storage.persist){navigator.storage.persist().cat
 render(true);
 })();
 </script>
+<script>
+    // Уникальный Сервис-Воркер строго для Hustle Tracker
+    if ('serviceWorker' in navigator) {
+        const swCode = "self.addEventListener('fetch', function(e) {});";
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        // Замыкаем скрипт строго на файл трекера, чтобы Android дал чистую установку
+        navigator.serviceWorker.register(swUrl, { scope: './goals.html' }).catch(err => console.log(err));
+    }
+</script>
+
 </body>
 </html>

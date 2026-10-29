@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0C0F">
+<title>Obsidiaudio — голосовой интеллект</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@400;500&display=swap">
+<style>
+:root{--bg:#0B0C0F;--s:#14161D;--a:#E8E3DA;--t1:rgba(232,227,218,.92);--t2:rgba(232,227,218,.65);--t3:rgba(232,227,218,.38);--t4:rgba(232,227,218,.18);
+--d:'Bebas Neue','Oswald','Arial Narrow',Impact,sans-serif;--b:'Montserrat','Helvetica Neue',Arial,sans-serif;
+--e:cubic-bezier(.2,.7,.2,1);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+*,*::before,*::after{box-sizing:inherit;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--t1);font:400 14px/1.6 var(--b);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;text-align:left}
+:focus-visible{outline:1px solid var(--a);outline-offset:3px}
+[hidden]{display:none!important}
+.app{max-width:680px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.mast{padding:20px 0 14px;border-bottom:1px solid var(--t4)}
+.mast-row{display:flex;align-items:flex-end}
+.brand{font:400 22px/1 var(--d);letter-spacing:.14em}
+.sub{margin:10px 0 0;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.view.in{animation:rev .32s var(--e) both}
+@keyframes rev{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{margin:36px 0 18px;font:400 clamp(40px,12.5vw,84px)/.92 var(--d);letter-spacing:.01em}
+.lead{margin:0 0 28px;max-width:34ch;font-weight:300;font-size:14px;color:var(--t2)}
+.trigger{display:flex;flex-direction:column;justify-content:space-between;width:100%;min-height:208px;padding:18px;background:var(--s);border:1px solid var(--t4);border-radius:2px;transition:border-color .18s,transform .12s}
+.trigger:active{transform:scale(.99);border-color:var(--a)}
+.trigger .tl,.trigger .ts{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.trigger .tb{font:400 clamp(56px,19vw,104px)/.85 var(--d);transition:opacity .18s}
+.trigger .tr{display:flex;justify-content:space-between;align-items:flex-end}
+.bar{width:28px;height:28px;border:1px solid var(--a);position:relative}
+.bar::after{content:"";position:absolute;inset:7px;background:var(--a)}
+.trigger.live{border-color:var(--a)}
+.trigger.live .bar::after{inset:9px}
+.note-line{margin:12px 0 0;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)}
+.panel{margin-top:16px;padding:16px;background:var(--s);border:1px solid var(--t4);border-radius:2px}
+.rec-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+.lbl{margin:0;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.timer{font:400 56px/.8 var(--d);letter-spacing:.02em}
+.wave{display:block;width:100%;height:96px}
+.proc{padding:44px 0 20px}
+.proc .big{margin:0 0 20px;font:400 clamp(44px,14vw,88px)/.9 var(--d)}
+.step{font:400 clamp(20px,6vw,30px)/1.1 var(--d);letter-spacing:.06em;opacity:0;transform:translateY(8px)}
+.step.on{opacity:1;transform:none;letter-spacing:.02em;transition:opacity .24s var(--e),transform .24s var(--e),letter-spacing .45s var(--e)}
+.sec{margin-top:40px}
+.sec>.lbl{padding-bottom:10px;border-bottom:1px solid var(--t4);margin-bottom:6px}
+.row{display:grid;grid-template-columns:52px 1fr;gap:0 8px;width:100%;min-height:64px;padding:14px 0;border-bottom:1px solid var(--t4);align-items:start;transition:background .12s}
+.row:active{background:var(--s)}
+.rn{font:400 34px/.9 var(--d)}
+.rt{font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.rd{display:block;font-size:11px;color:var(--t3);margin-top:2px}
+.back{display:inline-flex;align-items:center;min-height:44px;margin:8px 0 0;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t2)}
+.nt{margin:8px 0 14px;font:400 clamp(40px,12vw,72px)/.92 var(--d)}
+.meta{margin:0;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)}
+.tags{margin:10px 0 0;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--t1)}
+.tags span+span{margin-left:14px;padding-left:14px;border-left:1px solid var(--t4)}
+.blk{display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid var(--t4)}
+.blk .n{font:400 26px/1 var(--d);color:var(--t3)}
+.blk h3{margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.blk p{margin:0;font-weight:300;color:var(--t1)}
+.raw{margin:12px 0 0;font-weight:300;font-size:13px;color:var(--t3);font-style:italic}
+.task{display:grid;grid-template-columns:32px 1fr;align-items:center;width:100%;min-height:48px;border-bottom:1px solid var(--t4)}
+.box{width:20px;height:20px;border:1px solid var(--a);position:relative;transition:background .12s}
+.task[aria-checked=true] .box{background:var(--a)}
+.task[aria-checked=true] .box::after{content:"";position:absolute;left:5px;top:1px;width:6px;height:11px;border:solid var(--bg);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.task .tt{transition:opacity .18s}
+.task[aria-checked=true] .tt{opacity:.38;text-decoration:line-through}
+.link{display:grid;grid-template-columns:32px 1fr;width:100%;min-height:56px;padding:12px 0;border-bottom:1px solid var(--t4)}
+.link .ar{font:400 22px/1 var(--d)}
+.empty{padding:28px 0}
+.empty b{display:block;font:400 34px/1 var(--d);margin-bottom:8px}
+.empty span{font-weight:300;color:var(--t2);font-size:13px}
+.ghost{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid var(--t4);border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.ghost:active{border-color:var(--a)}
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;background:var(--bg);border-top:1px solid var(--t4);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav-in{display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:680px;padding:0 max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px))}
+.nav button{display:flex;align-items:baseline;gap:10px;min-height:56px;padding:12px 0;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);transition:color .18s}
+.nav button b{font:400 24px/1 var(--d)}
+.nav button[aria-current=page]{color:var(--a)}
+.toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,10px);width:min(420px,calc(100% - 40px));padding:13px 16px;background:var(--s);border:1px solid var(--a);color:var(--t1);font-size:12px;line-height:1.45;opacity:0;pointer-events:none;z-index:20;transition:opacity .2s var(--e),transform .2s var(--e)}.toast.show{opacity:1;transform:translate(-50%,0)}
+.dlg{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;background:rgba(11,12,15,.92);padding:20px;z-index:9}
+.dlg-in{width:100%;max-width:420px;padding:20px;background:var(--s);border:1px solid var(--a);border-radius:2px;margin-bottom:env(safe-area-inset-bottom,0px)}
+.dlg-in h2{margin:0 0 8px;font:400 34px/1 var(--d)}
+.dlg-in p{margin:0 0 20px;font-weight:300;color:var(--t2);font-size:13px}
+.dlg-act{display:flex;gap:10px}
+.dlg-act .ghost{flex:1;justify-content:center}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (min-width:768px){.hero{margin-top:56px}.trigger{min-height:260px}}
+</style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230B0C0F'/%3E%3Ctext x='50' y='65' font-family='Bebas Neue, Montserrat' font-size='55' fill='%23E8E3DA' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230B0C0F'/%3E%3Ctext x='50' y='65' font-family='Bebas Neue, Montserrat' font-size='55' fill='%23E8E3DA' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<div class="app">
+  <header class="mast">
+    <div class="mast-row"><span class="brand">OBSIDIAUDIO</span></div>
+    <p class="sub">Голосовой интеллект / Полевые заметки</p>
+  </header>
+  <main>
+    <section id="v-capture" class="view" aria-label="Запись">
+      <div id="hero">
+        <h1 class="hero">СКАЖИТЕ МЫСЛЬ.<br>МЫ РАЗБЕРЁМ ОСТАЛЬНОЕ.</h1>
+        <p class="lead">Просто скажите, что у вас в голове. Из записи получится понятная заметка с задачами и связями.</p>
+      </div>
+      <button id="trigger" class="trigger" type="button" aria-label="Начать запись">
+        <span class="tl" id="trl">Новая заметка</span>
+        <span class="tr"><span><span class="tb" id="trb" style="display:block">НАЧАТЬ</span><span class="ts" id="trs">Голосовая заметка</span></span><span class="bar" aria-hidden="true"></span></span>
+      </button>
+            <div id="rec" class="panel" hidden>
+        <div class="rec-row"><div><p class="lbl">Запись</p><p class="lbl" style="color:var(--t2)">Голосовой захват активен</p></div><span class="timer" id="timer">00:00</span></div>
+        <canvas id="wave" class="wave" role="img" aria-label="Форма звуковой волны"></canvas>
+      </div>
+      <div id="proc" class="proc" hidden aria-live="polite">
+        <p class="big">ОБРАБОТКА</p>
+        <div class="step" id="step"></div>
+      </div>
+      <section class="sec" id="recent"><h2 class="lbl">Последние заметки</h2><div id="recentList"></div></section>
+    </section>
+    <section id="v-note" class="view" hidden aria-label="Заметка"></section>
+    <section id="v-archive" class="view" hidden aria-label="Архив">
+      <h1 class="nt" style="margin-top:36px">АРХИВ</h1>
+      <div id="archiveList"></div>
+      <div class="sec" style="margin-top:32px"><button class="ghost" type="button" data-reset>Сбросить демо-данные</button></div>
+    </section>
+  </main>
+</div>
+<nav class="nav" aria-label="Основная навигация"><div class="nav-in">
+  <button type="button" data-nav="capture" aria-current="page"><b>01</b>Запись</button>
+  <button type="button" data-nav="archive"><b>02</b>Заметки</button>
+</div></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="dlg" id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlgT"><div class="dlg-in">
+  <h2 id="dlgT">СБРОСИТЬ ДАННЫЕ?</h2><p>Все заметки будут удалены и заменены исходными демо-заметками.</p>
+  <div class="dlg-act"><button class="ghost" type="button" id="dlgNo">Отмена</button><button class="ghost" type="button" id="dlgYes" style="border-color:var(--a)">Сбросить</button></div>
+</div></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Утилиты ---------- */
+const $ = s => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const pad = (n, l = 2) => String(n).padStart(l, '0');
+const MONTHS = ['ЯНВ','ФЕВ','МАР','АПР','МАЙ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ','ДЕК'];
+const fmtDur = s => pad(Math.floor(s / 60)) + ':' + pad(s % 60);
+const fmtDate = (iso, short) => {
+  const d = new Date(iso); if (isNaN(d)) return '—';
+  const dm = pad(d.getDate()) + ' ' + MONTHS[d.getMonth()], t = pad(d.getHours()) + ':' + pad(d.getMinutes());
+  return short ? dm + ' / ' + t : dm + ' ' + d.getFullYear() + ' / ' + t;
+};
+const numOf = id => parseInt(String(id).replace(/\D/g, ''), 10) || 0;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const debounce = (fn, ms) => { let t; return () => { clearTimeout(t); t = setTimeout(fn, ms); }; };
+const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const AppState = { view: 'capture', from: 'capture', recording: false, processing: false, activeNoteId: null, recordingStartedAt: null };
+
+/* ---------- Данные: сценарии симуляции ИИ ---------- */
+const SCENARIOS = [
+  { title: 'ДОКУМЕНТЫ ПО ПОСТАВКЕ', cat: 'logistics', dur: 165, tags: ['ЛОГИСТИКА', 'РАБОТА', 'ЖИЗНЬ'],
+    raw: 'так мне нужно не забыть проверить поставку завтра утром и потом наверное позвонить на склад потому что они сказали что документы могут быть ещё не готовы и ещё надо отправить обновлённые цифры команде до обеда и вечером заехать в аптеку',
+    sec: [['Документы по поставке', 'Выяснить, готовы ли необходимые документы до завтрашнего утра.'], ['Склад', 'Позвонить на склад и уточнить статус документов.'], ['Команда', 'Отправить обновлённые рабочие цифры до 12:00.']],
+    tasks: ['Проверить документы по поставке', 'Позвонить на склад', 'Отправить обновлённые цифры'] },
+  { title: 'ПЛАН ЗАПУСКА', cat: 'work', dur: 128, tags: ['РАБОТА', 'ПЛАНЫ'],
+    raw: 'значит по запуску на следующей неделе надо ещё раз пройтись по плану и наверное сдвинуть презентацию на среду потому что дизайнеры не успевают и нужно согласовать бюджет с финансами до пятницы и ещё собрать всех на короткий созвон',
+    sec: [['Сроки', 'Сдвинуть презентацию на среду из-за загрузки дизайнеров.'], ['Бюджет', 'Согласовать бюджет запуска с финансами до пятницы.'], ['Команда', 'Организовать короткий общий созвон по плану запуска.']],
+    tasks: ['Сдвинуть презентацию на среду', 'Согласовать бюджет с финансами', 'Назначить созвон'] },
+  { title: 'СЕМЕЙНЫЕ ДЕЛА', cat: 'life', dur: 94, tags: ['ЖИЗНЬ', 'ДОМ'],
+    raw: 'в субботу надо купить подарок маме и заодно забрать посылку из пункта выдачи и не забыть записаться к врачу на следующий месяц а ещё починить кран на кухне он опять течёт',
+    sec: [['Подарок', 'Купить подарок маме в субботу.'], ['Посылка', 'Забрать посылку из пункта выдачи.'], ['Дом', 'Записаться к врачу и вызвать мастера к крану на кухне.']],
+    tasks: ['Купить подарок маме', 'Забрать посылку', 'Записаться к врачу', 'Починить кран'] },
+  { title: 'ИДЕЯ ПРОЕКТА', cat: 'idea', dur: 142, tags: ['ИДЕИ', 'ПРОЕКТ'],
+    raw: 'была мысль сделать маленькое приложение для голосовых заметок которое само раскладывает всё по задачам и находит связи между старыми записями без графов просто списком и текстом надо набросать первые экраны',
+    sec: [['Концепция', 'Приложение для голосовых заметок с автоматической расстановкой задач.'], ['Связи', 'Находить связи между записями и показывать их текстом, без графов.'], ['Следующий шаг', 'Набросать первые экраны.']],
+    tasks: ['Описать концепцию', 'Набросать первые экраны'] },
+  { title: 'ИТОГИ ВСТРЕЧИ', cat: 'work', dur: 201, tags: ['РАБОТА', 'ВСТРЕЧА'],
+    raw: 'итак по встрече с партнёрами договорились что они пришлют договор до четверга а мы подготовим презентацию и ещё я пообещал вернуться с ответом по срокам поставки на следующей неделе надо не забыть',
+    sec: [['Договор', 'Партнёры присылают договор до четверга.'], ['Презентация', 'Подготовить презентацию для партнёров.'], ['Сроки поставки', 'Дать ответ по срокам поставки на следующей неделе.']],
+    tasks: ['Дождаться договора', 'Подготовить презентацию', 'Ответить по срокам поставки'] }
+];
+const SEEDS = [
+  { at: '2026-10-25T09:12:00', links: [], title: 'ПЛАНИРОВАНИЕ НЕДЕЛИ', cat: 'work', dur: 118, tags: ['РАБОТА', 'ПЛАНЫ'],
+    raw: 'так на этой неделе главное закрыть отчёт по кварталу и потом встретиться с командой чтобы обсудить планы и наверное разобрать почту которая накопилась с прошлой пятницы',
+    sec: [['Отчёт', 'Закрыть квартальный отчёт.'], ['Команда', 'Провести встречу и обсудить планы.'], ['Почта', 'Разобрать накопившуюся почту.']], tasks: ['Закрыть отчёт', 'Встреча с командой'] },
+  { at: '2026-10-27T11:08:00', links: [], title: 'ОТВЕТ ПОСТАВЩИКА', cat: 'logistics', dur: 87, tags: ['ЛОГИСТИКА', 'РАБОТА'],
+    raw: 'поставщик ответил что партию отправят в четверг но цену пересмотрят и надо ещё раз уточнить условия оплаты и сроки поставки пока не подписали',
+    sec: [['Отгрузка', 'Партию отправят в четверг.'], ['Цена', 'Поставщик пересматривает цену.'], ['Условия', 'Уточнить условия оплаты и сроки поставки до подписания.']], tasks: ['Уточнить условия оплаты'] },
+  { at: '2026-10-28T18:42:00', links: [2, 1], title: 'ДОКУМЕНТЫ СКЛАДА', cat: 'logistics', dur: 112, tags: ['ЛОГИСТИКА', 'СКЛАД', 'РАБОТА'],
+    raw: 'на складе сказали что документы по поставке будут готовы только завтра к обеду и надо проверить накладные и сообщить команде чтобы не ждали отгрузку с утра',
+    sec: [['Документы', 'Документы по поставке будут готовы завтра к обеду.'], ['Накладные', 'Проверить накладные.'], ['Команда', 'Предупредить команду о переносе отгрузки.']], tasks: ['Проверить накладные', 'Предупредить команду'] }
+];
+
+/* ---------- StorageManager ---------- */
+const StorageManager = {
+  KEY: 'obsidiaudio_notes', memory: null,
+  load() {
+    let raw = null;
+    try { raw = localStorage.getItem(this.KEY); } catch (e) { return this.memory; }
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw); if (!Array.isArray(data)) throw new Error('format');
+      const seen = new Set();
+      return data.filter(n => n && typeof n.id === 'string' && Array.isArray(n.structuredSections) && !seen.has(n.id) && seen.add(n.id))
+        .map(n => Object.assign({ title: 'ЗАМЕТКА', category: '', tags: [], rawText: '', tasks: [], linkedNoteIds: [], duration: 0, completed: false }, n));
+    } catch (e) { return null; }
+  },
+  save(list) { this.memory = list; try { localStorage.setItem(this.KEY, JSON.stringify(list)); } catch (e) { /* хранилище недоступно: данные живут в памяти */ } },
+  clear() { this.memory = null; try { localStorage.removeItem(this.KEY); } catch (e) { /* ignore */ } }
+};
+
+/* ---------- NoteManager ---------- */
+const NoteManager = {
+  list: [],
+  build(s, id, at, dur, links) {
+    return { id, createdAt: at, duration: dur, title: s.title, category: s.cat, tags: s.tags.slice(), rawText: s.raw,
+      structuredSections: s.sec.map(([heading, text]) => ({ heading: heading.toUpperCase(), text })),
+      tasks: s.tasks.map(text => ({ text, done: false })), linkedNoteIds: links, completed: false };
+  },
+  seed() { return SEEDS.map((s, i) => this.build(s, 'note_' + pad(i + 1, 3), s.at, s.dur, s.links.map(n => 'note_' + pad(n, 3)))); },
+  init() { const saved = StorageManager.load(); this.list = saved && saved.length ? saved : this.seed(); this.persist(); },
+  persist() { StorageManager.save(this.list); },
+  reset() { StorageManager.clear(); this.list = this.seed(); this.persist(); },
+  get(id) { return this.list.find(n => n.id === id) || null; },
+  sorted() { return this.list.slice().sort((a, b) => numOf(b.id) - numOf(a.id)); },
+  keywords(text) { return new Set(String(text).toLowerCase().match(/[а-яёa-z]{6,}/g) || []); },
+  score(a, b) {
+    const tags = a.tags.filter(t => b.tags.includes(t)).length;
+    const ka = this.keywords(a.rawText), kb = this.keywords(b.rawText);
+    let words = 0; ka.forEach(w => { if (kb.has(w)) words++; });
+    return tags * 3 + Math.min(words, 5) * 2 + (a.category && a.category === b.category ? 4 : 0);
+  },
+  create(scenario) {
+    const id = 'note_' + pad(Math.max(0, ...this.list.map(n => numOf(n.id))) + 1, 3);
+    const note = this.build(scenario, id, new Date().toISOString(), scenario.dur, []);
+    note.linkedNoteIds = this.list.map(n => ({ id: n.id, s: this.score(note, n) })).filter(x => x.s >= 4)
+      .sort((x, y) => y.s - x.s).slice(0, 3).map(x => x.id);
+    this.list.push(note); this.persist(); return note;
+  },
+  /* Прямые связи + обратные (кто ссылается на эту заметку) — считаются при отображении */
+  related(note) {
+    const out = new Map();
+    note.linkedNoteIds.forEach(id => { const n = this.get(id); if (n) out.set(id, n); });
+    this.list.forEach(n => { if (n.id !== note.id && n.linkedNoteIds.includes(note.id)) out.set(n.id, n); });
+    return [...out.values()].sort((a, b) => numOf(b.id) - numOf(a.id));
+  }
+};
+
+/* ---------- WaveformRenderer: реальный сигнал микрофона ---------- */
+const WaveformRenderer = {
+  cv: null, ctx: null, raf: 0, w: 0, h: 0, analyser: null, data: null, smoothLevel: 0,
+  init() {
+    this.cv = $('#wave'); this.ctx = this.cv.getContext && this.cv.getContext('2d'); if (!this.ctx) return;
+    const redraw = debounce(() => this.resize(), 80);
+    if (window.ResizeObserver) new ResizeObserver(redraw).observe(this.cv.parentElement); else addEventListener('resize', redraw);
+  },
+  resize() {
+    if (!this.ctx) return;
+    const r = this.cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    if (!r.width || !r.height) return;
+    this.w = r.width; this.h = r.height;
+    this.cv.width = Math.round(r.width * dpr); this.cv.height = Math.round(r.height * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!this.raf) this.draw(0);
+  },
+  draw(level) {
+    const { ctx, w, h } = this; if (!ctx || !w) return;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(232,227,218,.18)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+    ctx.strokeStyle = '#E8E3DA'; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.beginPath();
+    const time = performance.now() / 1000;
+    for (let x = 0; x <= w; x += 2) {
+      const taper = Math.pow(Math.sin(Math.PI * x / w), 0.8);
+      const movement = Math.sin(x * 0.045 + time * 4.2) * 0.6 + Math.sin(x * 0.017 - time * 2.1) * 0.4;
+      const y = h / 2 + h * 0.38 * level * taper * movement;
+      x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  },
+  attach(analyser) {
+    this.analyser = analyser;
+    this.data = new Uint8Array(analyser.fftSize);
+  },
+  start() {
+    this.resize();
+    if (!this.analyser) return;
+    const frame = () => {
+      this.analyser.getByteTimeDomainData(this.data);
+      let sum = 0;
+      for (let i = 0; i < this.data.length; i++) {
+        const v = (this.data[i] - 128) / 128;
+        sum += v * v;
+      }
+      const rms = Math.sqrt(sum / this.data.length);
+      const target = Math.min(1, rms * 4.2);
+      this.smoothLevel += (target - this.smoothLevel) * 0.22;
+      this.draw(this.smoothLevel);
+      this.raf = requestAnimationFrame(frame);
+    };
+    cancelAnimationFrame(this.raf);
+    this.raf = requestAnimationFrame(frame);
+  },
+  stop() {
+    cancelAnimationFrame(this.raf); this.raf = 0; this.analyser = null; this.data = null; this.smoothLevel = 0; this.draw(0.12);
+  }
+};
+
+/* ---------- ViewController ---------- */
+const ViewController = {
+  show(name) {
+    ['capture', 'note', 'archive'].forEach(v => { $('#v-' + v).hidden = v !== name; });
+    const target = $('#v-' + name); target.classList.remove('in'); void target.offsetWidth; target.classList.add('in');
+    AppState.view = name; window.scrollTo(0, 0);
+    document.querySelectorAll('[data-nav]').forEach(b => {
+      const active = b.dataset.nav === (name === 'capture' ? 'capture' : 'archive');
+      active ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
+    });
+    if (name === 'archive') this.renderList($('#archiveList'), Infinity);
+  },
+  setCapture(state) {
+    const live = state === 'recording', busy = state === 'processing';
+    $('#hero').hidden = live || busy; $('#trigger').hidden = busy;
+    $('#rec').hidden = !live; $('#proc').hidden = !busy; $('#recent').hidden = live || busy;
+    const t = $('#trigger'); t.classList.toggle('live', live);
+    $('#trl').textContent = live ? 'Идёт запись' : 'Новая заметка';
+    $('#trb').textContent = live ? 'СТОП' : 'НАЧАТЬ';
+    $('#trs').textContent = live ? 'Завершить заметку' : 'Голосовая заметка';
+    t.setAttribute('aria-label', live ? 'Завершить запись' : 'Начать голосовую заметку');
+    if (state === 'idle') this.renderList($('#recentList'), 3);
+  },
+  renderList(root, limit) {
+    root.replaceChildren();
+    const notes = NoteManager.sorted().slice(0, limit);
+    if (!notes.length) { root.append(this.empty('ЗАМЕТОК ПОКА НЕТ.', 'Ваша первая мысль появится здесь.')); return; }
+    notes.forEach(n => {
+      const b = el('button', 'row'); b.type = 'button'; b.dataset.open = n.id;
+      const info = el('span'); info.append(el('span', 'rt', n.title), el('span', 'rd', fmtDate(n.createdAt, true)));
+      b.append(el('span', 'rn', pad(numOf(n.id))), info); root.append(b);
+    });
+  },
+  empty(title, text) { const d = el('div', 'empty'); d.append(el('b', '', title), el('span', '', text)); return d; }
+};
+
+/* ---------- NoteView (подробный просмотр) ---------- */
+const NoteView = {
+  section(label) { const s = el('section', 'sec'); s.append(el('h2', 'lbl', label)); return s; },
+  render(id) {
+    const root = $('#v-note'); root.replaceChildren();
+    const back = el('button', 'back', '← ' + (AppState.from === 'archive' ? 'К архиву' : 'К записи')); back.type = 'button'; back.dataset.back = '';
+    root.append(back);
+    const n = NoteManager.get(id); AppState.activeNoteId = n ? n.id : null;
+    if (!n) { root.append(ViewController.empty('ЗАМЕТКА НЕ НАЙДЕНА.', 'Возможно, она была удалена.')); return; }
+    root.append(el('p', 'lbl', 'Голосовая заметка / ' + pad(numOf(n.id), 3)), el('h1', 'nt', n.title));
+    root.append(el('p', 'meta', fmtDate(n.createdAt) + '  //  Длительность: ' + fmtDur(n.duration)));
+    const tags = el('p', 'tags'); n.tags.forEach(t => tags.append(el('span', '', '#' + t))); root.append(tags);
+
+    const ai = this.section('Структурированная заметка ИИ');
+    n.structuredSections.forEach((s, i) => { const b = el('div', 'blk'); const c = el('div'); c.append(el('h3', '', s.heading), el('p', '', s.text)); b.append(el('span', 'n', pad(i + 1)), c); ai.append(b); });
+    root.append(ai);
+
+    const raw = this.section('Исходный текст записи'); raw.append(el('p', 'raw', n.rawText)); root.append(raw);
+
+    const tk = this.section('Извлечённые задачи');
+    n.tasks.forEach((t, i) => {
+      const b = el('button', 'task'); b.type = 'button'; b.setAttribute('role', 'checkbox'); b.setAttribute('aria-checked', String(!!t.done)); b.dataset.task = i;
+      b.append(el('span', 'box'), el('span', 'tt', t.text)); tk.append(b);
+    });
+    root.append(tk);
+
+    const cn = this.section('Связанные заметки'), rel = NoteManager.related(n);
+    if (!rel.length) cn.append(ViewController.empty('СВЯЗЕЙ ПОКА НЕТ.', 'Они появятся, когда найдутся похожие записи.'));
+    rel.forEach(r => {
+      const b = el('button', 'link'); b.type = 'button'; b.dataset.open = r.id;
+      const i = el('span'); i.append(el('span', 'rt', pad(numOf(r.id)) + ' / ' + r.title), el('span', 'rd', fmtDate(r.createdAt)));
+      b.append(el('span', 'ar', '↗'), i); cn.append(b);
+    });
+    root.append(cn);
+  },
+  toggleTask(btn) {
+    const n = NoteManager.get(AppState.activeNoteId); const t = n && n.tasks[+btn.dataset.task]; if (!t) return;
+    t.done = !t.done; n.completed = n.tasks.every(x => x.done);
+    btn.setAttribute('aria-checked', String(t.done)); NoteManager.persist();
+  }
+};
+
+/* ---------- AudioRecorder: реальный микрофон + MediaRecorder ---------- */
+const AudioRecorder = {
+  stream: null, recorder: null, chunks: [], audioContext: null, source: null, analyser: null, timerId: 0, toastTimer: 0,
+  async start() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.showError('Микрофон недоступен. Откройте сайт через HTTPS или http://localhost.');
+      return;
+    }
+    if (!window.MediaRecorder) {
+      this.showError('Этот браузер не поддерживает запись аудио через MediaRecorder.');
+      return;
+    }
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.chunks = [];
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      this.source = this.audioContext.createMediaStreamSource(this.stream);
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 2048;
+      this.analyser.smoothingTimeConstant = 0.82;
+      this.source.connect(this.analyser);
+      WaveformRenderer.attach(this.analyser);
+
+      const mimeCandidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+      const mimeType = mimeCandidates.find(type => MediaRecorder.isTypeSupported(type));
+      this.recorder = mimeType ? new MediaRecorder(this.stream, { mimeType }) : new MediaRecorder(this.stream);
+      this.recorder.ondataavailable = e => { if (e.data && e.data.size) this.chunks.push(e.data); };
+      this.recorder.start(250);
+
+      AppState.recording = true; AppState.recordingStartedAt = Date.now();
+      ViewController.setCapture('recording'); WaveformRenderer.start(); this.tick();
+      this.timerId = setInterval(() => this.tick(), 250);
+    } catch (err) {
+      this.cleanup();
+      if (err && err.name === 'NotAllowedError') this.showError('Доступ к микрофону запрещён. Разрешите микрофон для этого сайта в настройках браузера и попробуйте снова.');
+      else if (err && err.name === 'NotFoundError') this.showError('Микрофон не найден. Подключите микрофон и попробуйте снова.');
+      else this.showError('Не удалось запустить микрофон. Проверьте разрешения браузера.');
+    }
+  },
+  tick() { $('#timer').textContent = fmtDur(Math.floor((Date.now() - AppState.recordingStartedAt) / 1000)); },
+  async stop() {
+    if (!this.recorder || this.recorder.state === 'inactive') return;
+    clearInterval(this.timerId);
+    const recorder = this.recorder;
+    const audioBlob = await new Promise(resolve => {
+      recorder.addEventListener('stop', () => {
+        const type = recorder.mimeType || 'audio/webm';
+        resolve(new Blob(this.chunks, { type }));
+      }, { once: true });
+      recorder.stop();
+    });
+    AppState.recording = false;
+    WaveformRenderer.stop();
+    this.cleanup();
+    /* Реальная запись уже получена в audioBlob. Пока AI остаётся демо-симуляцией. */
+    await ProcessingController.run(audioBlob);
+  },
+  cleanup() {
+    clearInterval(this.timerId); this.timerId = 0;
+    if (this.stream) this.stream.getTracks().forEach(track => track.stop());
+    if (this.audioContext) this.audioContext.close().catch(() => {});
+    this.stream = null; this.recorder = null; this.chunks = []; this.source = null; this.analyser = null;
+  },
+  showError(message) {
+    const toast = $('#toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+  }
+};
+
+/* ---------- ProcessingController ---------- */
+const ProcessingController = {
+  async step(text, ms) {
+    const s = $('#step'); s.classList.remove('on'); s.textContent = text; void s.offsetWidth; s.classList.add('on'); await sleep(ms);
+  },
+  async run() {
+    AppState.processing = true; ViewController.setCapture('processing');
+    await this.step('01 / РАСПОЗНАЁМ РЕЧЬ', 700);
+    await this.step('02 / СОБИРАЕМ В ЗАМЕТКУ', 700);
+    const note = NoteManager.create(SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]);
+    AppState.processing = false; ViewController.setCapture('idle'); App.open(note.id, 'capture');
+  }
+};
+
+/* ---------- Confirm dialog ---------- */
+const Dialog = {
+  open() { $('#dlg').hidden = false; $('#dlgNo').focus(); },
+  close() { $('#dlg').hidden = true; }
+};
+
+/* ---------- NavigationController / App ---------- */
+const App = {
+  open(id, from) { AppState.from = from || AppState.view; NoteView.render(id); ViewController.show('note'); },
+  goto(name) {
+    if (AppState.processing) return;
+    if (name === 'capture' && !AppState.recording) ViewController.setCapture('idle');
+    ViewController.show(name);
+  },
+  init() {
+    NoteManager.init(); WaveformRenderer.init(); ViewController.setCapture('idle');
+    document.addEventListener('click', e => {
+      const t = e.target.closest('[data-open],[data-nav],[data-back],[data-task],[data-reset],#trigger,#dlgNo,#dlgYes'); if (!t) return;
+      if (t.id === 'trigger') { if (!AppState.processing) AppState.recording ? AudioRecorder.stop() : AudioRecorder.start(); }
+      else if (t.dataset.open) this.open(t.dataset.open, AppState.view);
+      else if (t.dataset.nav) this.goto(t.dataset.nav);
+      else if ('back' in t.dataset) this.goto(AppState.from === 'archive' ? 'archive' : 'capture');
+      else if (t.dataset.task != null) NoteView.toggleTask(t);
+      else if ('reset' in t.dataset) Dialog.open();
+      else if (t.id === 'dlgNo') Dialog.close();
+      else if (t.id === 'dlgYes') { NoteManager.reset(); Dialog.close(); ViewController.renderList($('#archiveList'), Infinity); ViewController.renderList($('#recentList'), 3); }
+    });
+    addEventListener('keydown', e => { if (e.key === 'Escape') Dialog.close(); });
+  }
+};
+
+App.init();
+})();
+</script>
+ <script>
+// Уникальный Сервис-Воркер строго для Obsidiaudio
+if ('serviceWorker' in navigator) {
+    const swCode = "self.addEventListener('fetch', function(e) {});";
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    // Добавляем scope, чтобы запереть скрипт только внутри этого файла
+    navigator.serviceWorker.register(swUrl, { scope: './obsidiaudio.html' }).catch(err => console.log(err));
+}
+</script>
+
+
+</body>
+</html>
