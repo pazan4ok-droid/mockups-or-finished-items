@@ -82,6 +82,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
 .nav button{display:flex;align-items:baseline;gap:10px;min-height:56px;padding:12px 0;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);transition:color .18s}
 .nav button b{font:400 24px/1 var(--d)}
 .nav button[aria-current=page]{color:var(--a)}
+.toast{position:fixed;left:50%;bottom:78px;transform:translate(-50%,10px);width:min(420px,calc(100% - 40px));padding:13px 16px;background:var(--s);border:1px solid var(--a);color:var(--t1);font-size:12px;line-height:1.45;opacity:0;pointer-events:none;z-index:20;transition:opacity .2s var(--e),transform .2s var(--e)}.toast.show{opacity:1;transform:translate(-50%,0)}
 .dlg{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;background:rgba(11,12,15,.92);padding:20px;z-index:9}
 .dlg-in{width:100%;max-width:420px;padding:20px;background:var(--s);border:1px solid var(--a);border-radius:2px;margin-bottom:env(safe-area-inset-bottom,0px)}
 .dlg-in h2{margin:0 0 8px;font:400 34px/1 var(--d)}
@@ -101,15 +102,14 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
   <main>
     <section id="v-capture" class="view" aria-label="Запись">
       <div id="hero">
-        <h1 class="hero">ГОВОРИТЕ.<br>МЫ СТРУКТУРИРУЕМ.</h1>
-        <p class="lead">Фиксируйте мысль в сыром виде. Obsidiaudio превращает устную речь в структурированное знание.</p>
+        <h1 class="hero">СКАЖИТЕ МЫСЛЬ.<br>МЫ РАЗБЕРЁМ ОСТАЛЬНОЕ.</h1>
+        <p class="lead">Просто скажите, что у вас в голове. Из записи получится понятная заметка с задачами и связями.</p>
       </div>
       <button id="trigger" class="trigger" type="button" aria-label="Начать запись">
-        <span class="tl" id="trl">Захват / 01</span>
-        <span class="tr"><span><span class="tb" id="trb" style="display:block">ГОВОРИТЕ</span><span class="ts" id="trs">Начать запись</span></span><span class="bar" aria-hidden="true"></span></span>
+        <span class="tl" id="trl">Новая заметка</span>
+        <span class="tr"><span><span class="tb" id="trb" style="display:block">НАЧАТЬ</span><span class="ts" id="trs">Голосовая заметка</span></span><span class="bar" aria-hidden="true"></span></span>
       </button>
-      <p class="note-line" id="protoNote">Прототип: запись симулируется, доступ к микрофону не нужен.</p>
-      <div id="rec" class="panel" hidden>
+            <div id="rec" class="panel" hidden>
         <div class="rec-row"><div><p class="lbl">Запись</p><p class="lbl" style="color:var(--t2)">Голосовой захват активен</p></div><span class="timer" id="timer">00:00</span></div>
         <canvas id="wave" class="wave" role="img" aria-label="Форма звуковой волны"></canvas>
       </div>
@@ -131,6 +131,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cu
   <button type="button" data-nav="capture" aria-current="page"><b>01</b>Запись</button>
   <button type="button" data-nav="archive"><b>02</b>Заметки</button>
 </div></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="dlg" id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlgT"><div class="dlg-in">
   <h2 id="dlgT">СБРОСИТЬ ДАННЫЕ?</h2><p>Все заметки будут удалены и заменены исходными демо-заметками.</p>
   <div class="dlg-act"><button class="ghost" type="button" id="dlgNo">Отмена</button><button class="ghost" type="button" id="dlgYes" style="border-color:var(--a)">Сбросить</button></div>
@@ -248,9 +249,9 @@ const NoteManager = {
   }
 };
 
-/* ---------- WaveformRenderer ---------- */
+/* ---------- WaveformRenderer: реальный сигнал микрофона ---------- */
 const WaveformRenderer = {
-  cv: null, ctx: null, raf: 0, w: 0, h: 0, t0: 0,
+  cv: null, ctx: null, raf: 0, w: 0, h: 0, analyser: null, data: null, smoothLevel: 0,
   init() {
     this.cv = $('#wave'); this.ctx = this.cv.getContext && this.cv.getContext('2d'); if (!this.ctx) return;
     const redraw = debounce(() => this.resize(), 80);
@@ -263,33 +264,49 @@ const WaveformRenderer = {
     this.w = r.width; this.h = r.height;
     this.cv.width = Math.round(r.width * dpr); this.cv.height = Math.round(r.height * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (!this.raf) this.draw(0, 0.12);
+    if (!this.raf) this.draw(0);
   },
-  draw(t, level) {
+  draw(level) {
     const { ctx, w, h } = this; if (!ctx || !w) return;
     ctx.clearRect(0, 0, w, h);
     ctx.strokeStyle = 'rgba(232,227,218,.18)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
     ctx.strokeStyle = '#E8E3DA'; ctx.lineWidth = 1.5; ctx.lineJoin = 'round'; ctx.beginPath();
+    const time = performance.now() / 1000;
     for (let x = 0; x <= w; x += 2) {
       const taper = Math.pow(Math.sin(Math.PI * x / w), 0.8);
-      const y = h / 2 + h * 0.38 * level * taper * (Math.sin(x * 0.045 + t * 4.2) * 0.6 + Math.sin(x * 0.017 - t * 2.1) * 0.4);
+      const movement = Math.sin(x * 0.045 + time * 4.2) * 0.6 + Math.sin(x * 0.017 - time * 2.1) * 0.4;
+      const y = h / 2 + h * 0.38 * level * taper * movement;
       x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
     }
     ctx.stroke();
   },
+  attach(analyser) {
+    this.analyser = analyser;
+    this.data = new Uint8Array(analyser.fftSize);
+  },
   start() {
     this.resize();
-    if (reduceMotion()) { this.draw(0, 0.5); return; }
-    this.t0 = performance.now();
-    const frame = now => {
-      const t = (now - this.t0) / 1000;
-      const level = 0.15 + 0.85 * Math.abs(Math.sin(t * 1.9) * Math.sin(t * 0.63 + 1.2));
-      this.draw(t, level); this.raf = requestAnimationFrame(frame);
+    if (!this.analyser) return;
+    const frame = () => {
+      this.analyser.getByteTimeDomainData(this.data);
+      let sum = 0;
+      for (let i = 0; i < this.data.length; i++) {
+        const v = (this.data[i] - 128) / 128;
+        sum += v * v;
+      }
+      const rms = Math.sqrt(sum / this.data.length);
+      const target = Math.min(1, rms * 4.2);
+      this.smoothLevel += (target - this.smoothLevel) * 0.22;
+      this.draw(this.smoothLevel);
+      this.raf = requestAnimationFrame(frame);
     };
+    cancelAnimationFrame(this.raf);
     this.raf = requestAnimationFrame(frame);
   },
-  stop() { cancelAnimationFrame(this.raf); this.raf = 0; this.draw(0, 0.12); }
+  stop() {
+    cancelAnimationFrame(this.raf); this.raf = 0; this.analyser = null; this.data = null; this.smoothLevel = 0; this.draw(0.12);
+  }
 };
 
 /* ---------- ViewController ---------- */
@@ -306,13 +323,13 @@ const ViewController = {
   },
   setCapture(state) {
     const live = state === 'recording', busy = state === 'processing';
-    $('#hero').hidden = live || busy; $('#trigger').hidden = busy; $('#protoNote').hidden = busy;
+    $('#hero').hidden = live || busy; $('#trigger').hidden = busy;
     $('#rec').hidden = !live; $('#proc').hidden = !busy; $('#recent').hidden = live || busy;
     const t = $('#trigger'); t.classList.toggle('live', live);
-    $('#trl').textContent = live ? 'Идёт запись' : 'Захват / 01';
-    $('#trb').textContent = live ? 'СТОП' : 'ГОВОРИТЕ';
-    $('#trs').textContent = live ? 'Остановить запись' : 'Начать запись';
-    t.setAttribute('aria-label', live ? 'Остановить запись' : 'Начать запись');
+    $('#trl').textContent = live ? 'Идёт запись' : 'Новая заметка';
+    $('#trb').textContent = live ? 'СТОП' : 'НАЧАТЬ';
+    $('#trs').textContent = live ? 'Завершить заметку' : 'Голосовая заметка';
+    t.setAttribute('aria-label', live ? 'Завершить запись' : 'Начать голосовую заметку');
     if (state === 'idle') this.renderList($('#recentList'), 3);
   },
   renderList(root, limit) {
@@ -371,16 +388,76 @@ const NoteView = {
   }
 };
 
-/* ---------- AudioSimulator ---------- */
-const AudioSimulator = {
-  timerId: 0,
-  start() {
-    AppState.recording = true; AppState.recordingStartedAt = Date.now();
-    ViewController.setCapture('recording'); WaveformRenderer.start(); this.tick();
-    this.timerId = setInterval(() => this.tick(), 250);
+/* ---------- AudioRecorder: реальный микрофон + MediaRecorder ---------- */
+const AudioRecorder = {
+  stream: null, recorder: null, chunks: [], audioContext: null, source: null, analyser: null, timerId: 0, toastTimer: 0,
+  async start() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.showError('Микрофон недоступен. Откройте сайт через HTTPS или http://localhost.');
+      return;
+    }
+    if (!window.MediaRecorder) {
+      this.showError('Этот браузер не поддерживает запись аудио через MediaRecorder.');
+      return;
+    }
+    try {
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.chunks = [];
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      this.source = this.audioContext.createMediaStreamSource(this.stream);
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 2048;
+      this.analyser.smoothingTimeConstant = 0.82;
+      this.source.connect(this.analyser);
+      WaveformRenderer.attach(this.analyser);
+
+      const mimeCandidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+      const mimeType = mimeCandidates.find(type => MediaRecorder.isTypeSupported(type));
+      this.recorder = mimeType ? new MediaRecorder(this.stream, { mimeType }) : new MediaRecorder(this.stream);
+      this.recorder.ondataavailable = e => { if (e.data && e.data.size) this.chunks.push(e.data); };
+      this.recorder.start(250);
+
+      AppState.recording = true; AppState.recordingStartedAt = Date.now();
+      ViewController.setCapture('recording'); WaveformRenderer.start(); this.tick();
+      this.timerId = setInterval(() => this.tick(), 250);
+    } catch (err) {
+      this.cleanup();
+      if (err && err.name === 'NotAllowedError') this.showError('Доступ к микрофону запрещён. Разрешите микрофон для этого сайта в настройках браузера и попробуйте снова.');
+      else if (err && err.name === 'NotFoundError') this.showError('Микрофон не найден. Подключите микрофон и попробуйте снова.');
+      else this.showError('Не удалось запустить микрофон. Проверьте разрешения браузера.');
+    }
   },
   tick() { $('#timer').textContent = fmtDur(Math.floor((Date.now() - AppState.recordingStartedAt) / 1000)); },
-  stop() { clearInterval(this.timerId); AppState.recording = false; WaveformRenderer.stop(); ProcessingController.run(); }
+  async stop() {
+    if (!this.recorder || this.recorder.state === 'inactive') return;
+    clearInterval(this.timerId);
+    const recorder = this.recorder;
+    const audioBlob = await new Promise(resolve => {
+      recorder.addEventListener('stop', () => {
+        const type = recorder.mimeType || 'audio/webm';
+        resolve(new Blob(this.chunks, { type }));
+      }, { once: true });
+      recorder.stop();
+    });
+    AppState.recording = false;
+    WaveformRenderer.stop();
+    this.cleanup();
+    /* Реальная запись уже получена в audioBlob. Пока AI остаётся демо-симуляцией. */
+    await ProcessingController.run(audioBlob);
+  },
+  cleanup() {
+    clearInterval(this.timerId); this.timerId = 0;
+    if (this.stream) this.stream.getTracks().forEach(track => track.stop());
+    if (this.audioContext) this.audioContext.close().catch(() => {});
+    this.stream = null; this.recorder = null; this.chunks = []; this.source = null; this.analyser = null;
+  },
+  showError(message) {
+    const toast = $('#toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+  }
 };
 
 /* ---------- ProcessingController ---------- */
@@ -390,8 +467,8 @@ const ProcessingController = {
   },
   async run() {
     AppState.processing = true; ViewController.setCapture('processing');
-    await this.step('01 / WHISPER ТРАНСКРИБИРУЕТ', 700);
-    await this.step('02 / DEEPSEEK СТРУКТУРИРУЕТ', 700);
+    await this.step('01 / РАСПОЗНАЁМ РЕЧЬ', 700);
+    await this.step('02 / СОБИРАЕМ В ЗАМЕТКУ', 700);
     const note = NoteManager.create(SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]);
     AppState.processing = false; ViewController.setCapture('idle'); App.open(note.id, 'capture');
   }
@@ -415,7 +492,7 @@ const App = {
     NoteManager.init(); WaveformRenderer.init(); ViewController.setCapture('idle');
     document.addEventListener('click', e => {
       const t = e.target.closest('[data-open],[data-nav],[data-back],[data-task],[data-reset],#trigger,#dlgNo,#dlgYes'); if (!t) return;
-      if (t.id === 'trigger') { if (!AppState.processing) AppState.recording ? AudioSimulator.stop() : AudioSimulator.start(); }
+      if (t.id === 'trigger') { if (!AppState.processing) AppState.recording ? AudioRecorder.stop() : AudioRecorder.start(); }
       else if (t.dataset.open) this.open(t.dataset.open, AppState.view);
       else if (t.dataset.nav) this.goto(t.dataset.nav);
       else if ('back' in t.dataset) this.goto(AppState.from === 'archive' ? 'archive' : 'capture');
