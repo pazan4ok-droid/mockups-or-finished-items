@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RusTrans Group — AI Dispatcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0A1120;--steel:#131926;--ice:#F5F7FA;--blue:#0055FF;--online:#22C55E;
+  --line:rgba(245,247,250,.08);--muted:rgba(245,247,250,.6);
+  --f-head:"Montserrat",system-ui,sans-serif;--f-body:"Inter",system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--navy);color:var(--ice);font-family:var(--f-body);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* Blurred corporate-site backdrop */
+.site{position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:10%;
+  background:radial-gradient(ellipse 80% 45% at 20% 105%,rgba(0,85,255,.28),transparent 70%),linear-gradient(180deg,var(--navy),var(--steel))}
+.site h2{margin:0 0 20px;font:700 clamp(32px,8vw,84px)/.95 var(--f-head);letter-spacing:-2px}
+.site p{margin:0;max-width:500px;color:var(--muted);line-height:1.6}
+.site__brand{font:700 11px var(--f-head);letter-spacing:3px;margin-bottom:12px!important}
+.site::after{content:"";position:absolute;inset:0;background:rgba(10,17,32,.35);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+
+/* Widget */
+.rt-widget{position:fixed;right:12px;bottom:12px;width:380px;max-width:calc(100vw - 24px);height:min(620px,80vh);display:flex;flex-direction:column;
+  background:var(--navy);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;line-height:1.5}
+.rt-widget button,.rt-widget input{font:inherit;color:inherit}
+.rt-widget :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.rt-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--steel);border-bottom:1px solid var(--line);flex:none}
+.rt-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.rt-logo{width:40px;height:40px;flex:none}
+.rt-title{margin:0;font:600 15px/1.25 var(--f-head)}
+.rt-sub{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.rt-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex:none}
+.rt-status{display:flex;align-items:center;gap:8px;font:500 12px var(--f-head)}
+.rt-dot{width:8px;height:8px;border-radius:50%;background:var(--online);animation:rt-pulse 3s ease-in-out infinite}
+@keyframes rt-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
+.rt-text-btn{background:none;border:0;padding:4px;border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;transition:color .18s}
+.rt-text-btn:hover{color:var(--ice);text-decoration:underline;text-decoration-color:var(--blue);text-underline-offset:3px}
+.rt-text-btn:active{opacity:.7}
+
+.rt-log{flex:1;min-height:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:var(--steel) transparent}
+.rt-log::-webkit-scrollbar{width:6px}
+.rt-log::-webkit-scrollbar-thumb{background:var(--steel);border:1px solid var(--line);border-radius:8px}
+.rt-msg{max-width:88%;padding:10px 12px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;animation:rt-in 220ms ease-out both}
+.rt-msg--agent{align-self:flex-start;background:var(--steel);border:1px solid var(--line)}
+.rt-msg--user{align-self:flex-end;background:var(--blue)}
+@keyframes rt-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rt-typing{display:inline-flex;gap:5px;align-items:center;padding:14px 12px}
+.rt-typing i{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:rt-bounce 1.1s ease-in-out infinite}
+.rt-typing i:nth-child(2){animation-delay:.15s}.rt-typing i:nth-child(3){animation-delay:.3s}
+@keyframes rt-bounce{0%,60%,100%{transform:none;opacity:.6}30%{transform:translateY(-4px);opacity:1}}
+
+.rt-chips{display:flex;flex-wrap:wrap;gap:8px;padding:8px 16px 4px;flex:none}
+.rt-chip{min-height:36px;padding:6px 12px;background:transparent;border:1px solid var(--blue);border-radius:8px;font:500 12px var(--f-head);cursor:pointer;transition:background-color .18s,transform .1s}
+.rt-chip:hover{background:var(--blue)}
+.rt-chip:active{transform:scale(.97);opacity:.85}
+.rt-form{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px 16px 14px;background:var(--steel);border-top:1px solid var(--line);flex:none}
+.rt-input{flex:1;min-width:0;min-height:44px;padding:8px 0;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;transition:border-color .2s}
+.rt-input::placeholder{color:var(--muted)}
+.rt-input:hover{border-bottom-color:rgba(245,247,250,.3)}
+.rt-widget .rt-input:focus,.rt-widget .rt-input:focus-visible{outline:0;border-bottom-color:var(--blue)}
+.rt-send{width:44px;height:44px;flex:none;display:grid;place-items:center;padding:0;background:var(--blue);border:0;border-radius:50%;cursor:pointer;transition:opacity .18s,transform .1s,background-color .18s}
+.rt-send:hover:not(:disabled){background:#0049D9}
+.rt-send:active:not(:disabled){transform:scale(.94)}
+.rt-send:disabled{opacity:.4;cursor:not-allowed}
+.rt-send svg{width:20px;height:20px}
+.rt-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* API key setup screen */
+.rt-setup{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;padding:32px;background:var(--steel)}
+.rt-setup[hidden]{display:none}
+.rt-setup h2{margin:0 0 12px;font:600 18px var(--f-head)}
+.rt-setup p{margin:0 0 20px;color:var(--muted)}
+.rt-setup label{font:500 12px var(--f-head);color:var(--muted)}
+.rt-setup .rt-input{width:100%;margin-bottom:20px;flex:none}
+.rt-btn{min-height:44px;padding:10px 16px;background:var(--blue);border:0;border-radius:8px;font:600 13px var(--f-head);cursor:pointer;transition:background-color .18s,transform .1s}
+.rt-btn:hover{background:#0049D9}.rt-btn:active{transform:scale(.98)}
+.rt-btn--ghost{background:transparent;border:1px solid var(--blue);margin-top:8px}
+.rt-btn--ghost:hover{background:var(--blue)}
+
+@media (max-width:479.98px){
+  .rt-widget{right:0;bottom:0;left:0;width:100%;max-width:100%;height:88vh;height:88dvh;border-radius:12px 12px 0 0;border-width:1px 0 0}
+  .rt-chip{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .rt-dot,.rt-typing i{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="site" aria-hidden="true">
+  <p class="site__brand">RUSTRANS GROUP</p>
+  <h2>Через время<br>и расстояние.</h2>
+  <p>Корпоративные данные контейнерной линии. Тестовый стенд ИИ-диспетчера.</p>
+</div>
+
+<section class="rt-widget" aria-label="Чат с диспетчером RusTrans Group">
+  <header class="rt-head">
+    <div class="rt-brand">
+      <svg class="rt-logo" viewBox="0 0 40 40" role="img" aria-label="Логотип RusTrans Group">
+        <circle cx="20" cy="20" r="19" fill="none" stroke="#0055FF" stroke-width="2"/>
+        <path d="M10 22h20l-3 6H13z" fill="#0055FF"/><path d="M15 22v-5h6v-3h4v8z" fill="#0055FF"/>
+        <path d="M9 31c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 7 0" fill="none" stroke="#0055FF" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <div><h1 class="rt-title">RusTrans AI Dispatcher</h1><p class="rt-sub">Онлайн-диспетчер · 24/7</p></div>
+    </div>
+    <div class="rt-right">
+      <div class="rt-status"><span class="rt-dot" aria-hidden="true"></span><span>Онлайн</span></div>
+      <button class="rt-text-btn" id="rt-reset" type="button">Сменить ключ</button>
+    </div>
+  </header>
+
+  <div class="rt-log" id="rt-log" role="log" aria-live="polite" aria-label="История сообщений" tabindex="0"></div>
+  <div class="rt-chips" id="rt-chips" role="group" aria-label="Быстрые действия"></div>
+
+  <form class="rt-form" id="rt-form" autocomplete="off">
+    <label class="rt-sr" for="rt-input">Ваше сообщение диспетчеру</label>
+    <input class="rt-input" id="rt-input" type="text" maxlength="500" placeholder="Введите ваш вопрос…">
+    <button class="rt-send" id="rt-send" type="submit" aria-label="Отправить сообщение" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F5F7FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </form>
+
+  <form class="rt-setup" id="rt-setup" aria-labelledby="rt-setup-title" hidden>
+    <h2 id="rt-setup-title">Подключение DeepSeek</h2>
+    <p>Введите ваш DeepSeek API-ключ. Он сохраняется только в localStorage этого браузера и отправляется только на api.deepseek.com. Не используйте ключ на общих компьютерах.</p>
+    <label for="rt-key">API-ключ</label>
+    <input class="rt-input" id="rt-key" type="password" placeholder="sk-…" autocomplete="off">
+    <button class="rt-btn" type="submit">Подключить диспетчера</button>
+    <button class="rt-btn rt-btn--ghost" id="rt-offline" type="button">Продолжить без ИИ (только расписание)</button>
+  </form>
+</section>
+
+<script>
+/* ============ DATA: source of truth for the schedule ============ */
+const LINER_SCHEDULE = [
+  { vessel:"Xin Bo Yuan 89", voyage:"762S",  portOfLoading:"Shanghai", portOfDischarge:"Vrangel", etd:"2026-10-27T18:00:00+08:00", eta:"2026-11-04T09:00:00+10:00", status:"В пути" },
+  { vessel:"Neptune Line 21", voyage:"2639N", portOfLoading:"Qingdao",  portOfDischarge:"Vrangel", etd:"2026-10-30T12:00:00+08:00", eta:"2026-11-07T10:00:00+10:00", status:"В порту" },
+  { vessel:"Lily V",          voyage:"764S",  portOfLoading:"Nansha",   portOfDischarge:"Vrangel", etd:"2026-11-03T20:00:00+08:00", eta:"2026-11-12T08:00:00+10:00", status:"Запланировано" },
+  { vessel:"BA.",             voyage:"118N",  portOfLoading:"Xiamen",   portOfDischarge:"Vrangel", etd:"2026-11-09T14:00:00+08:00", eta:"2026-11-18T07:00:00+10:00", status:"Запланировано" },
+  { vessel:"Neptune Line 21", voyage:"2641N", portOfLoading:"Nansha",   portOfDischarge:"Vrangel", etd:"2026-11-12T10:00:00+08:00", eta:"2026-11-21T09:00:00+10:00", status:"Запланировано" },
+  { vessel:"Xin Bo Yuan 89", voyage:"765S",  portOfLoading:"Shanghai", portOfDischarge:"Vrangel", etd:"2026-11-17T18:00:00+08:00", eta:"2026-11-25T09:00:00+10:00", status:"Запланировано" },
+  { vessel:"BA.",             voyage:"120N",  portOfLoading:"Qingdao",  portOfDischarge:"Vrangel", etd:"2026-11-20T16:00:00+08:00", eta:"2026-11-28T08:00:00+10:00", status:"Запланировано" },
+  { vessel:"Lily V",          voyage:"766S",  portOfLoading:"Shanghai", portOfDischarge:"Vrangel", etd:"2026-11-24T19:00:00+08:00", eta:"2026-12-03T09:00:00+10:00", status:"Запланировано" }
+];
+
+/* ============ CONFIG ============ */
+const API_URL = "https://api.deepseek.com/chat/completions";
+const STORAGE_KEY = "deepseek_api_key";
+const HISTORY_LIMIT = 10;
+const SUGGESTIONS = ["Проверить расписание","Узнать статус судна","Рассчитать фрахт","Связаться с менеджером"];
+const PORT_RU = { Shanghai:"Шанхай", Nansha:"Наньша", Xiamen:"Сямынь", Qingdao:"Циндао", Vrangel:"Врангель" };
+
+const buildSystemPrompt = () => `Ты — корпоративный ИИ-диспетчер морской контейнерной линии «RusTrans Group». Отвечай только на русском языке, вежливо, кратко и по делу, как логист международной компании.
+
+РАСПИСАНИЕ (единственный источник данных о рейсах; ETD/ETA указаны в местном времени порта):
+${LINER_SCHEDULE.map(e => `- ${e.vessel}, рейс ${e.voyage}: ${PORT_RU[e.portOfLoading]} → ${PORT_RU[e.portOfDischarge]}, ETD ${e.etd}, ETA ${e.eta}, статус: ${e.status}`).join("\n")}
+
+ПРАВИЛА:
+- По судну или порту из списка называй точные рейсы, даты и статус. Не придумывай суда и рейсы, которых нет в списке; если данных нет, так и скажи.
+- Расчёт фрахта: можешь дать только ориентир и обязательно укажи, что это не коммерческое предложение. Точная ставка зависит от груза, типа контейнера (20/40 футов) и объёма — предложи связаться с менеджером.
+- Не обещай, что запрос передан менеджеру: ты не можешь отправлять заявки.
+- Пиши простым текстом без Markdown.`;
+
+/* ============ Helpers ============ */
+const $ = id => document.getElementById(id);
+const norm = s => s.toLowerCase().replace(/ё/g, "е");
+const fmtDate = iso => {
+  const m = iso.match(/([+-])(\d\d):/), h = Number(m[2]);
+  try {
+    return new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:`Etc/GMT${m[1]==="+"?"-":"+"}${h}`}).format(new Date(iso));
+  } catch { return iso.slice(0,16).replace("T"," "); }
+};
+
+/* ============ Offline fallback (no API key) ============ */
+const LocalEngine = {
+  answer(raw){
+    const t = norm(raw);
+    const vessel = [...new Set(LINER_SCHEDULE.map(e => e.vessel))].find(v => t.includes(norm(v).replace(/\.$/, "")));
+    const port = Object.entries(PORT_RU).find(([en, ru]) => t.includes(en.toLowerCase()) || t.includes(ru.toLowerCase().slice(0, 5)))?.[0];
+    if (/менеджер|позвон|связаться/.test(t)) return "Без подключения ИИ я могу показать только расписание. Для связи с менеджером воспользуйтесь контактами на сайте компании.";
+    if (/фрахт|ставк|рассчита|стоимост/.test(t)) return "Расчёт фрахта доступен в режиме ИИ. Точная ставка зависит от груза и типа контейнера, её уточняет менеджер.";
+    let list = LINER_SCHEDULE;
+    if (vessel) list = list.filter(e => e.vessel === vessel);
+    else if (port) list = list.filter(e => e.portOfLoading === port || e.portOfDischarge === port);
+    else if (/статус/.test(t)) return "Укажите судно: " + [...new Set(LINER_SCHEDULE.map(e => e.vessel))].join(", ") + ".";
+    return list.slice(0, 5).map(e => `${e.vessel}, рейс ${e.voyage}\n${PORT_RU[e.portOfLoading]} → ${PORT_RU[e.portOfDischarge]}\nETD ${fmtDate(e.etd)} · ETA ${fmtDate(e.eta)}\nСтатус: ${e.status}`).join("\n\n");
+  }
+};
+
+/* ============ DeepSeek client ============ */
+const Api = {
+  key: "", offline: false, history: [],
+  load(){ try { this.key = localStorage.getItem(STORAGE_KEY) || ""; } catch { this.key = ""; } },
+  save(k){ this.key = k; try { localStorage.setItem(STORAGE_KEY, k); } catch { /* storage unavailable: key lives in memory only */ } },
+  clear(){ this.key = ""; this.offline = false; this.history = []; try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ } },
+  async ask(text){
+    if (this.offline) return LocalEngine.answer(text);
+    this.history.push({ role:"user", content:text });
+    this.history = this.history.slice(-HISTORY_LIMIT);
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${this.key}` },
+      body: JSON.stringify({ model:"deepseek-chat", temperature:0.3, max_tokens:600,
+        messages:[{ role:"system", content:buildSystemPrompt() }, ...this.history] })
+    });
+    if (res.status === 401) throw new Error("auth");
+    if (!res.ok) throw new Error(`http ${res.status}`);
+    const data = await res.json();
+    const reply = data?.choices?.[0]?.message?.content?.trim();
+    if (!reply) throw new Error("empty");
+    this.history.push({ role:"assistant", content:reply });
+    return reply;
+  }
+};
+
+/* ============ UI ============ */
+const UI = {
+  queue: Promise.resolve(),
+  init(){
+    Api.load();
+    SUGGESTIONS.forEach(label => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "rt-chip"; b.textContent = label;
+      b.addEventListener("click", () => this.submit(label));
+      $("rt-chips").appendChild(b);
+    });
+    $("rt-input").addEventListener("input", () => this.syncSend());
+    $("rt-form").addEventListener("submit", e => { e.preventDefault(); this.submit($("rt-input").value); });
+    $("rt-setup").addEventListener("submit", e => {
+      e.preventDefault();
+      const k = $("rt-key").value.trim();
+      if (!k) { $("rt-key").focus(); return; }
+      Api.save(k); $("rt-key").value = ""; this.showSetup(false);
+    });
+    $("rt-offline").addEventListener("click", () => { Api.offline = true; this.showSetup(false); });
+    $("rt-reset").addEventListener("click", () => { Api.clear(); this.showSetup(true); });
+    this.append("agent", "Здравствуйте! Я AI-диспетчер RusTrans Group. Помогу с расписанием рейсов, статусом судна, ориентировочным расчётом фрахта и связью с менеджером. Выберите действие ниже или напишите вопрос.");
+    this.showSetup(!Api.key);
+  },
+  showSetup(show){
+    $("rt-setup").hidden = !show;
+    (show ? $("rt-key") : $("rt-input")).focus();
+  },
+  syncSend(){ $("rt-send").disabled = !$("rt-input").value.trim(); },
+  submit(text){
+    const value = (text || "").trim();
+    if (!value || (!Api.key && !Api.offline)) return;
+    this.append("user", value);
+    $("rt-input").value = ""; this.syncSend();
+    this.queue = this.queue.then(() => this.reply(value));
+  },
+  async reply(text){
+    const typing = this.typing();
+    let out;
+    try { out = await Api.ask(text); }
+    catch (err) {
+      console.error(err);
+      if (err.message === "auth"){ Api.clear(); out = "Ключ DeepSeek отклонён. Введите корректный ключ."; this.showSetup(true); }
+      else out = "Не удалось получить ответ. Проверьте подключение к интернету и повторите запрос.";
+    }
+    typing.remove();
+    this.append("agent", out);
+  },
+  typing(){
+    const el = document.createElement("div");
+    el.className = "rt-msg rt-msg--agent rt-typing";
+    el.innerHTML = '<i></i><i></i><i></i><span class="rt-sr">Диспетчер печатает…</span>';
+    $("rt-log").appendChild(el); this.scroll(); return el;
+  },
+  append(role, text){
+    const el = document.createElement("div");
+    el.className = `rt-msg rt-msg--${role}`;
+    el.textContent = text; // textContent: model output is never parsed as HTML
+    $("rt-log").appendChild(el); this.scroll();
+  },
+  scroll(){
+    const log = $("rt-log");
+    log.scrollTo({ top:log.scrollHeight, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }
+};
+document.addEventListener("DOMContentLoaded", () => UI.init());
+</script>
+</body>
+</html>

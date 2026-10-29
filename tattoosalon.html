@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тату-студия — авторские татуировки в Санкт-Петербурге</title>
+<meta name="description" content="Современная тату-студия: авторские татуировки в стиле файнлайн и блэкворк, созданные лично для вас.">
+<meta property="og:title" content="Тату-студия — авторские татуировки в Санкт-Петербурге">
+<meta property="og:description" content="Современная тату-студия: авторские татуировки в стиле файнлайн и блэкворк, созданные лично для вас.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0C0F;--bg2:#121315;--card:#181817;--warm:#24211E;--tx:#E8E3DA;--tx2:#B5AEA3;--mut:#77736C;--line:rgba(232,227,218,.12);--acc:#6A4740;--hi:#9A7767;--ease:cubic-bezier(.22,.61,.36,1);--sans:'Manrope','Helvetica Neue',Arial,sans-serif;--serif:'Cormorant Garamond',Georgia,serif;--pad:clamp(20px,4vw,56px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body.lock{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:1px solid var(--hi);outline-offset:4px}
+.wrap{max-width:1360px;margin:0 auto;padding:0 var(--pad)}
+.lab{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);font-weight:500}
+.h1,.h2{font-weight:500;text-transform:uppercase;letter-spacing:-.025em;line-height:.95}
+.h1{font-size:clamp(34px,7vw,120px)}
+.h2{font-size:clamp(30px,5.2vw,84px)}
+.ser{font-family:var(--serif);font-style:italic;text-transform:none;font-weight:400;letter-spacing:-.01em;color:var(--hi)}
+.sec{padding:clamp(80px,13vw,180px) 0}
+.rule{width:48px;height:1px;background:var(--hi);margin:28px 0}
+p{color:var(--tx2);max-width:46ch}
+/* grain */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* placeholders */
+.ph{position:absolute;inset:0;background:radial-gradient(120% 90% at var(--x,30%) var(--y,20%),var(--c1,#3a2f29),transparent 60%),radial-gradient(90% 80% at 80% 90%,var(--c2,#1c1a18),transparent 70%),#141312;filter:saturate(.8)}
+.ph::after{content:attr(data-t);position:absolute;left:14px;bottom:12px;font-size:10px;letter-spacing:.18em;color:rgba(232,227,218,.28);text-transform:uppercase}
+/* nav */
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:60;height:78px;transition:background .5s,backdrop-filter .5s,border-color .5s;border-bottom:1px solid transparent}
+nav.s{background:rgba(11,12,15,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+nav .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{font-weight:600;letter-spacing:.22em;font-size:13px;text-transform:uppercase}
+.links{display:flex;gap:clamp(18px,2.4vw,34px)}
+.links a,.ul{font-size:12px;letter-spacing:.16em;text-transform:uppercase;position:relative;color:var(--tx2);transition:color .3s}
+.links a::after,.ul::after{content:"";position:absolute;left:0;bottom:-5px;height:1px;width:100%;background:var(--tx);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.links a:hover,.ul:hover{color:var(--tx)}.links a:hover::after,.ul:hover::after{transform:scaleX(1)}
+.btn{display:inline-flex;align-items:center;gap:14px;padding:17px 22px;background:var(--tx);color:var(--bg);font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border-radius:2px;transition:background .3s,padding .3s}
+.btn i{font-style:normal;transition:transform .3s}
+.btn:hover{background:#fff4e6;padding-left:26px}.btn:hover i{transform:translateX(6px)}
+.btn.dk{background:var(--warm);color:var(--tx);border:1px solid var(--line)}.btn.dk:hover{background:#2f2b27}
+.nav-cta{padding:12px 16px}
+.burger{display:none;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.menu{position:fixed;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:var(--pad);gap:6px;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+.menu.o{opacity:1;visibility:visible}
+.menu a{font-size:clamp(30px,9vw,64px);font-weight:500;text-transform:uppercase;letter-spacing:-.025em;line-height:1.1}
+.menu a:last-child{color:var(--hi)}
+.menu .x{position:absolute;top:calc(28px + env(safe-area-inset-top,0px));right:var(--pad);font-size:12px;letter-spacing:.18em}
+/* hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero .bg{position:absolute;inset:0;transform:scale(1.12);transition:transform 2.4s var(--ease)}
+.hero.in .bg{transform:scale(1)}
+.hero .bg .ph{--c1:#4a3a31;--c2:#1a1715;--x:68%;--y:28%}
+.hero .bg img{width:100%;height:100%;object-fit:cover}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(11,12,15,.55) 0%,rgba(11,12,15,.18) 38%,rgba(11,12,15,.9) 100%);opacity:0;transition:opacity 1.4s .3s}
+.hero.in::before{opacity:1}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-bottom:clamp(90px,12vh,130px)}
+.hero .lab{color:var(--tx2);margin-bottom:28px}
+.ln{display:block;overflow:hidden;padding-bottom:.06em}
+.ln span{display:block;transform:translateY(105%);transition:transform 1.2s var(--ease)}
+.hero.in .ln span{transform:none}
+.hero.in .ln:nth-child(2) span{transition-delay:.12s}.hero.in .ln:nth-child(3) span{transition-delay:.24s}
+.fu{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.hero.in .fu{opacity:1;transform:none}
+.hero .sub{margin:34px 0 36px;font-size:17px;max-width:40ch}
+.cta-row{display:flex;gap:32px;align-items:center;flex-wrap:wrap}
+.scroll{position:absolute;z-index:2;right:var(--pad);bottom:34px;display:flex;flex-direction:column;align-items:center;gap:12px;writing-mode:vertical-rl}
+.scroll b{width:1px;height:56px;background:var(--line);position:relative;overflow:hidden;display:block}
+.scroll b::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:var(--tx);animation:dr 2.2s infinite var(--ease)}
+@keyframes dr{to{top:110%}}
+/* intro */
+.intro .wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(32px,6vw,100px);align-items:end}
+.intro .side p+p{margin-top:18px}
+/* works */
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;margin-bottom:clamp(40px,6vw,80px)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,2vw,28px);align-items:start}
+.w{position:relative;cursor:pointer;display:block;text-align:left;width:100%}
+.w .fr{position:relative;overflow:hidden;background:var(--card)}
+.w .fr>*:not(.ov){transition:transform .6s var(--ease)}
+.w:hover .fr>*:not(.ov){transform:scale(1.035)}
+.w img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.05)}
+.ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,12,15,.82),rgba(11,12,15,.15) 60%);opacity:0;transition:opacity .45s;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;gap:4px}
+.ov b{font-weight:500;font-size:16px;letter-spacing:.06em;text-transform:uppercase}
+.ov span{font-size:11px;letter-spacing:.18em;color:var(--tx2);text-transform:uppercase}
+.ov em{font-style:normal;font-size:11px;letter-spacing:.18em;margin-top:12px;transition:transform .4s}
+.w:hover .ov{opacity:1}.w:hover .ov em{transform:translateX(6px)}
+.cap{display:none;padding:12px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx2)}
+.cap span{display:block;color:var(--mut)}
+/* reveal */
+.rv{opacity:0;transform:translateY(30px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.rv.v{opacity:1;transform:none}
+.ci{clip-path:inset(0 0 100% 0);transition:clip-path 1.2s var(--ease)}
+.rv.v .ci,.ci.v{clip-path:inset(0)}
+/* artists */
+.art{background:var(--bg2)}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,100px);align-items:end}
+.agrid .bio p{font-size:clamp(17px,1.6vw,21px);color:var(--tx);max-width:34ch;margin-bottom:32px}
+.ac{text-align:left;display:block;width:100%}
+.ac .fr{position:relative;overflow:hidden;aspect-ratio:3/4.2}
+.ac:nth-child(2) .fr{aspect-ratio:3/3.6}
+.ac .fr>*{transition:transform .7s var(--ease);width:100%;height:100%;object-fit:cover}
+.ac:hover .fr>*{transform:scale(1.03)}
+.ac h3{font-size:clamp(22px,2.4vw,32px);font-weight:500;letter-spacing:-.01em;text-transform:uppercase;margin-top:22px}
+.ac .tags{margin:8px 0 18px;font-size:11px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase}
+/* studio */
+.sg{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,2vw,24px);margin-top:clamp(48px,7vw,96px);align-items:start}
+.sg .fr{position:relative;overflow:hidden}
+.s1{grid-column:1/8;aspect-ratio:4/3.2}
+.s2{grid-column:8/13;aspect-ratio:1;margin-top:clamp(40px,8vw,120px)}
+.s3{grid-column:6/11;aspect-ratio:5/4;margin-top:-6vw;position:relative;z-index:2;border:6px solid var(--bg)}
+.s4{grid-column:2/6;aspect-ratio:3/4;margin-top:4vw}
+.stx{display:flex;gap:clamp(24px,5vw,80px);margin-top:clamp(48px,6vw,80px);flex-wrap:wrap}
+.q{font-family:var(--serif);font-size:clamp(28px,3.4vw,46px);line-height:1.1;max-width:14ch;color:var(--tx)}
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.st{padding:28px 24px 8px 0;border-right:1px solid var(--line);padding-left:24px}
+.st:first-child{padding-left:0}.st:last-child{border-right:0}
+.st .n{font-size:clamp(72px,9vw,140px);font-weight:500;color:var(--warm);line-height:1;letter-spacing:-.04em;transition:color .5s}
+.st:hover .n{color:var(--acc)}
+.st h3{margin:20px 0 10px;font-size:14px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+.st p{font-size:15px}
+/* booking */
+.book{background:#151412}
+.bk{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(40px,7vw,120px)}
+.bk .btn{margin:32px 0 20px}
+form{display:grid;gap:30px;grid-template-columns:1fr 1fr}
+.f{display:flex;flex-direction:column;gap:6px}.f.full{grid-column:1/-1}
+.f label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.f input,.f textarea,.f select{background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--tx);font:inherit;font-size:19px;padding:8px 0 12px;border-radius:0;transition:border-color .3s;width:100%}
+.f select option{background:#151412}
+.f input::file-selector-button{background:var(--warm);color:var(--tx);border:0;padding:8px 14px;margin-right:14px;font:inherit;font-size:12px;cursor:pointer}
+.f input[type=file]{font-size:14px;color:var(--tx2)}
+.f input:focus,.f textarea:focus,.f select:focus{outline:0;border-color:var(--hi)}
+.f textarea{resize:vertical;min-height:70px}
+.note{grid-column:1/-1;font-size:13px;color:var(--mut)}
+.ok{grid-column:1/-1;color:var(--hi);font-family:var(--serif);font-size:28px}
+/* faq */
+.faq .wrap{display:grid;grid-template-columns:1fr 1.3fr;gap:clamp(32px,6vw,100px)}
+.it{border-bottom:1px solid var(--line)}.it:first-child{border-top:1px solid var(--line)}
+.it button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;text-align:left;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+.it .pl{position:relative;width:14px;height:14px;flex:none;transition:transform .4s var(--ease)}
+.it .pl::before,.it .pl::after{content:"";position:absolute;background:var(--tx2);left:0;top:6.5px;width:14px;height:1px}
+.it .pl::after{transform:rotate(90deg)}
+.it.o .pl{transform:rotate(45deg)}
+.an{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .5s var(--ease),opacity .5s}
+.an>div{overflow:hidden}.an p{padding-bottom:26px}
+.it.o .an{grid-template-rows:1fr;opacity:1}
+/* final */
+.fin{position:relative;min-height:90vh;display:flex;align-items:center;overflow:hidden}
+.fin .ph{--c1:#2b2420;opacity:.5}
+.fin::before{content:"";position:absolute;inset:0;background:rgba(11,12,15,.8);z-index:1}
+.fin .wrap{position:relative;z-index:2}
+.fin .lab{line-height:2;margin-bottom:32px}
+.fin .btn{margin-top:48px}
+footer{padding:80px 0 40px;border-top:1px solid var(--line)}
+.ft{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:start}
+.ft .c{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.ft .r{justify-self:end}
+.fb{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-top:80px;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+/* modal */
+.md{position:fixed;inset:0;z-index:80;background:rgba(11,12,15,.97);display:flex;opacity:0;visibility:hidden;transition:opacity .45s,visibility .45s;overflow-y:auto}
+.md.o{opacity:1;visibility:visible}
+.md .in{display:grid;grid-template-columns:1fr 340px;gap:clamp(24px,4vw,64px);width:100%;max-width:1500px;margin:auto;padding:90px var(--pad) 40px;align-items:center;min-height:100%}
+.md .im{position:relative;height:min(76vh,820px);overflow:hidden;background:var(--card)}
+.md .im img{width:100%;height:100%;object-fit:contain}
+.md h3{font-size:clamp(28px,3vw,42px);font-weight:500;text-transform:uppercase;line-height:1;letter-spacing:-.02em;margin:14px 0}
+.md .meta{font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-top:20px;line-height:2}
+.md .nv{display:flex;gap:28px;margin-top:40px}
+.md .cl{position:fixed;top:calc(26px + env(safe-area-inset-top,0px));right:var(--pad);z-index:2}
+.nv button,.cl{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.nv button:hover,.cl:hover{color:var(--tx)}
+.pr .in{grid-template-columns:1fr 1fr;align-items:start}
+.pr .im{height:min(82vh,860px)}
+.pr .sp{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 36px}
+.pr .sp span{border:1px solid var(--line);padding:7px 12px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2)}
+.pw{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 40px}
+.pw button{position:relative;aspect-ratio:3/4;overflow:hidden}.pw img{width:100%;height:100%;object-fit:cover}
+/* responsive */
+@media(max-width:1023px){
+.links,.nav-cta{display:none}.burger{display:block}
+.intro .wrap,.bk,.faq .wrap{grid-template-columns:1fr}
+.agrid{grid-template-columns:1fr}
+.steps{grid-template-columns:1fr 1fr}.st:nth-child(2){border-right:0}.st:nth-child(-n+2){padding-bottom:28px}.st:nth-child(3){padding-left:0}
+.md .in,.pr .in{grid-template-columns:1fr}.md .im,.pr .im{height:58vh}
+}
+@media(max-width:767px){
+.hero .sub{font-size:16px}.scroll{display:none}
+.grid>.w{grid-column:1/-1!important;margin-top:0!important}.grid{gap:34px}
+.w .ov{display:none}.cap{display:block}
+.w .fr{aspect-ratio:4/5!important}.grid>.w:nth-child(3n) .fr{aspect-ratio:1/1!important}
+.agrid{grid-template-columns:1fr}
+.sg{display:flex;flex-direction:column}.s2,.s3,.s4{margin-top:0;border:0}.s1,.s2,.s3,.s4{aspect-ratio:4/3}.s4{aspect-ratio:4/5}
+.steps{grid-template-columns:1fr}.st{border-right:0!important;padding:28px 0!important;border-bottom:1px solid var(--line)}
+form{grid-template-columns:1fr}
+.ft{grid-template-columns:1fr}.ft .r{justify-self:start}
+}
+@media(min-width:1440px){.hero .wrap{max-width:1500px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}html{scroll-behavior:auto}.rv,.fu,.ln span,.hero .bg{opacity:1!important;transform:none!important}.ci{clip-path:none!important}}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<nav id="nav" aria-label="Основная навигация">
+ <div class="wrap">
+  <a href="#top" class="logo">Название студии</a>
+  <div class="links"><a href="#works">Работы</a><a href="#artists">Мастер</a><a href="#studio">Студия</a><a href="#process">Процесс</a><a href="#faq">Вопросы</a></div>
+  <a href="#book" class="btn nav-cta">Записаться на сеанс <i>→</i></a>
+  <button class="burger" id="burger" aria-expanded="false" aria-controls="menu">Меню</button>
+ </div>
+</nav>
+<div class="menu" id="menu" aria-label="Меню">
+ <button class="x" id="mx">× Закрыть</button>
+ <a href="#works">Работы</a><a href="#artists">Мастер</a><a href="#studio">Студия</a><a href="#process">Процесс</a><a href="#faq">Вопросы</a><a href="#book">Записаться на сеанс</a>
+</div>
+
+<main id="top">
+<header class="hero" id="hero">
+ <div class="bg" id="heroBg"><div class="ph" data-t="Замените: фото первого экрана"></div></div>
+ <div class="wrap">
+  <p class="lab fu">Тату-студия<br>Санкт-Петербург</p>
+  <h1 class="h1"><span class="ln"><span>Татуировка</span></span><span class="ln"><span>как форма</span></span><span class="ln"><span><em class="ser">самовыражения.</em></span></span></h1>
+  <p class="sub fu" style="transition-delay:.7s">Авторские татуировки, созданные с вниманием к линии, композиции и человеку, который стоит за идеей.</p>
+  <div class="cta-row fu" style="transition-delay:.9s"><a href="#book" class="btn">Записаться на сеанс <i>→</i></a><a href="#works" class="ul">Смотреть работы →</a></div>
+ </div>
+ <div class="scroll fu lab" style="transition-delay:1.3s"><span>Листайте вниз</span><b></b></div>
+</header>
+
+<section class="sec intro" id="approach">
+ <div class="wrap">
+  <div class="rv"><p class="lab">01 / Подход</p><div class="rule"></div>
+   <h2 class="h2">Не просто<br>татуировка.<br><span class="ser">Часть вас.</span></h2></div>
+  <div class="side rv"><p>Каждая татуировка начинается с идеи. Воспоминание, чувство, образ, который вы носите в себе годами, — или что-то, что просто кажется правильным в этот момент.</p><p>Мы превращаем такие идеи в работы, созданные специально для вас.</p></div>
+ </div>
+</section>
+
+<section class="sec" id="works" style="padding-top:0">
+ <div class="wrap">
+  <div class="head rv"><div><p class="lab" style="margin-bottom:20px">02 / Портфолио</p><h2 class="h2">Избранные<br>работы</h2></div><p>Подборка недавних работ, авторских эскизов и личных проектов.</p></div>
+  <div class="grid" id="grid"></div>
+ </div>
+</section>
+
+<section class="sec art" id="artists">
+ <div class="wrap">
+  <div class="head rv"><div><p class="lab" style="margin-bottom:20px">03 / Мастер</p><h2 class="h2">Рука<br>за каждой работой.</h2></div></div>
+  <div class="agrid" id="agrid"></div>
+ </div>
+</section>
+
+<section class="sec" id="studio">
+ <div class="wrap">
+  <p class="lab rv" style="margin-bottom:20px">04 / Студия</p>
+  <h2 class="h2 rv">Пространство<br>для создания чего-то<br><span class="ser">личного.</span></h2>
+  <div class="sg">
+   <div class="fr s1 rv"><div class="ci" style="position:absolute;inset:0"><div class="ph" data-t="Замените: интерьер студии" style="--c1:#43362d"></div></div></div>
+   <div class="fr s2 rv"><div class="ph" data-t="Замените: свет из окна" style="--c1:#3b3029;--x:70%"></div></div>
+   <div class="fr s3 rv"><div class="ph" data-t="Замените: пластинки / цветы" style="--c1:#2f2723;--x:20%"></div></div>
+   <div class="fr s4 rv"><div class="ph" data-t="Замените: рабочее место" style="--c1:#392d2a;--y:60%"></div></div>
+  </div>
+  <div class="stx rv"><p class="q">Тихо, приватно и сосредоточенно на процессе.</p><p style="align-self:end">Всё в студии создано для того, чтобы вы могли не спешить, спокойно обсудить свою идею и насладиться процессом.</p></div>
+ </div>
+</section>
+
+<section class="sec" id="process" style="padding-top:0">
+ <div class="wrap">
+  <div class="head rv"><div><p class="lab" style="margin-bottom:20px">05 / Процесс</p><h2 class="h2">От идеи<br>до кожи.</h2></div></div>
+  <div class="steps rv">
+   <div class="st"><div class="n">01</div><h3>Идея</h3><p>Расскажите, что у вас на уме, — даже если это пока лишь ощущение.</p></div>
+   <div class="st"><div class="n">02</div><h3>Эскиз</h3><p>Мы развиваем идею до композиции, которая подходит именно вам.</p></div>
+   <div class="st"><div class="n">03</div><h3>Сеанс</h3><p>Спокойный, сосредоточенный сеанс в приватной обстановке студии.</p></div>
+   <div class="st"><div class="n">04</div><h3>Ваша работа</h3><p>Что-то личное, созданное, чтобы остаться с вами.</p></div>
+  </div>
+ </div>
+</section>
+
+<section class="sec book" id="book">
+ <div class="wrap bk">
+  <div class="rv"><h2 class="h2">Готовы<br>сделать это<br><span class="ser">навсегда?</span></h2>
+   <p style="margin-top:32px">Расскажите немного о своей идее, и мы ответим вам с дальнейшими шагами.</p>
+   <a href="#bookForm" class="btn">Записаться на сеанс <i>→</i></a><br><a href="#" class="ul">Instagram →</a></div>
+  <form id="bookForm" class="rv" novalidate>
+   <div class="f"><label for="n">Имя</label><input id="n" name="name" autocomplete="name" required></div>
+   <div class="f"><label for="c">Контакт</label><input id="c" name="contact" required></div>
+   <div class="f full"><label for="i">Instagram / Telegram</label><input id="i" name="social"></div>
+   <div class="f full"><label for="d">Идея татуировки</label><textarea id="d" name="idea" required></textarea></div>
+   <div class="f"><label for="p">Место на теле</label><input id="p" name="placement"></div>
+   <div class="f"><label for="s">Примерный размер</label><input id="s" name="size" placeholder="напр., 10 см"></div>
+   <div class="f"><label for="r">Референсы (изображения)</label><input id="r" type="file" accept="image/*" multiple></div>
+   <div class="f"><label for="dt">Желаемая дата</label><input id="dt" type="date"></div>
+   <div class="f full"><label for="b">Бюджет (по желанию)</label><input id="b" name="budget"></div>
+   <div class="full"><button class="btn" type="submit">Отправить заявку <i>→</i></button></div>
+   <p class="note" id="msg" role="status">Отправка формы не подтверждает запись. Мы свяжемся с вами, чтобы обсудить свободные даты и детали.</p>
+  </form>
+ </div>
+</section>
+
+<section class="sec faq" id="faq">
+ <div class="wrap">
+  <div class="rv"><p class="lab" style="margin-bottom:20px">06 / Вопросы</p><h2 class="h2">Перед<br>сеансом.</h2></div>
+  <div id="faqList" class="rv"></div>
+ </div>
+</section>
+
+<section class="fin">
+ <div class="ph" data-t="Замените: финальное фото"></div>
+ <div class="wrap rv">
+  <p class="lab">Ваша идея.<br>Ваша кожа.<br>Ваша работа.</p>
+  <h2 class="h1" style="font-size:clamp(32px,7vw,112px)">Сделаем<br>что-то<br><span class="ser">личное.</span></h2>
+  <a href="#bookForm" class="btn">Записаться на сеанс <i>→</i></a>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <div class="ft">
+   <div><p class="logo" style="margin-bottom:14px">Название студии</p><p class="lab">Тату-студия<br>Санкт-Петербург</p></div>
+   <div class="c"><a class="ul" href="#">Instagram</a><a class="ul" href="#">Telegram</a><a class="ul" href="#book">Контакты</a></div>
+   <div class="r"><a class="ul" href="#book">Записаться на сеанс →</a></div>
+  </div>
+  <div class="fb"><span>© 2026 Название студии</span><a class="ul" href="#">Политика конфиденциальности</a><span>Сделано с намерением.</span></div>
+ </div>
+</footer>
+
+<div class="md" id="md" role="dialog" aria-modal="true" aria-label="Просмотр работы">
+ <button class="cl" data-close>× Закрыть</button>
+ <div class="in" id="mdIn"></div>
+</div>
+<div class="md pr" id="pr" role="dialog" aria-modal="true" aria-label="Профиль мастера">
+ <button class="cl" data-close>× Закрыть</button>
+ <div class="in" id="prIn"></div>
+</div>
+
+<script>
+/* ---------- CONTENT (edit here) ----------
+   Set `image` to a real file path. Empty image = marked placeholder. */
+const works=[
+ {id:1,image:'',title:'Авторская работа',category:'Файнлайн',description:'Создана специально под идею и анатомию клиента.',artist:'Маша Никитина',year:2026},
+ {id:2,image:'',title:'Авторский эскиз',category:'Блэкворк',description:'Смелые, спокойные формы, созданные двигаться вместе с телом.',artist:'Маша Никитина',year:2026},
+ {id:3,image:'',title:'Личный заказ',category:'Файнлайн',description:'Персональный заказ, проработанный за две консультации.',artist:'Маша Никитина',year:2025},
+ {id:4,image:'',title:'Этюд деталей',category:'Крупный план',description:'Деталь линейной работы, после заживления.',artist:'Маша Никитина',year:2026},
+ {id:5,image:'',title:'Ботаника',category:'Файнлайн',description:'Органичная композиция, выстроенная вдоль линии плеча.',artist:'Маша Никитина',year:2025},
+ {id:6,image:'',title:'От эскиза к коже',category:'Процесс',description:'От первого наброска до готовой татуировки.',artist:'Маша Никитина',year:2026}
+];
+const artists=[
+ {name:'Маша Никитина',dat:'Маше',role:'Тату-мастер',portrait:'',description:'Работает с тонкой линией, органичными композициями и авторскими идеями, созданными вокруг каждого клиента.',specialties:['Файнлайн','Блэкворк','Авторские эскизы'],works:[1,2,3,4,5,6]}
+];
+const faqItems=[
+ ['Как записаться на сеанс?','Отправьте заявку через форму выше. Мы ответим, чтобы обсудить вашу идею, свободные даты и дальнейшие шаги.'],
+ ['Что отправить вместе с заявкой?','Вашу идею, желаемое место на теле и примерный размер, а также любые референсы — изображения, музыку, всё, что передаёт настроение.'],
+ ['Можно ли прийти со своей идеей?','Да. Большинство наших работ начинается с идеи клиента, даже самой сырой.'],
+ ['Вы делаете авторские эскизы?','Да. Каждая работа рисуется для вас и под вашу анатомию; мы не повторяем эскизы.'],
+ ['Как подготовиться к сеансу?','Хорошо выспитесь, поешьте перед сеансом, не употребляйте алкоголь за 24 часа и наденьте одежду, которая даёт свободный доступ к нужной зоне.'],
+ ['Сколько длится сеанс?','От часа для небольших работ до целого дня для крупных. Оценим время после согласования эскиза.'],
+ ['Как ухаживать за новой татуировкой?','В конце сеанса вы получите письменную инструкцию по уходу, а пока татуировка заживает, мы на связи и ответим на вопросы.'],
+ ['Какие условия по предоплате?','Предоплата закрепляет за вами дату и вычитается из итоговой стоимости. Подробности мы сообщим при подтверждении сеанса.']
+];
+/* ---------- RENDER ---------- */
+const tints=[['#4a3a31','#1c1a18'],['#2e2a2a','#1a1816'],['#43362d','#161412'],['#382b2a','#1a1715'],['#3b3329','#171614'],['#2f2a26','#1b1917']];
+const ph=(i,t)=>{const c=tints[i%6];return `<div class="ph" data-t="${t}" style="--c1:${c[0]};--c2:${c[1]};--x:${20+(i*23)%60}%;--y:${15+(i*17)%50}%"></div>`};
+const media=(src,alt,i,t)=>src?`<img src="${src}" alt="${alt}" loading="lazy" decoding="async">`:ph(i,t);
+const layout=[[1,7,'4/5',0],[8,13,'1/1',90],[1,5,'3/4',0],[5,13,'5/4',60],[2,8,'1/1',0],[8,13,'3/4',-40]];
+const $=s=>document.querySelector(s);
+$('#grid').innerHTML=works.map((w,i)=>{const l=layout[i%6];
+ return `<button class="w rv" data-i="${i}" style="grid-column:${l[0]}/${l[1]};margin-top:${l[3]}px" aria-label="Открыть: ${w.title}, ${w.category}">
+ <div class="fr" style="aspect-ratio:${l[2]}">${media(w.image,w.title+' — '+w.category,i,'Заглушка '+w.id)}
+ <div class="ov"><b>${w.title}</b><span>${w.category}</span><em>СМОТРЕТЬ →</em></div></div>
+ <div class="cap">${w.title}<span>${w.category}</span></div></button>`}).join('');
+$('#agrid').innerHTML=artists.map((a,i)=>`<button class="ac rv" data-a="${i}"><div class="fr">${media(a.portrait,'Портрет: '+a.name,i+2,'Заглушка: портрет')}</div>
+ <h3>${a.name}</h3><div class="tags">${a.role}<br>${a.specialties.join(' / ')}</div><span class="ul">Открыть профиль →</span></button><div class="bio rv"><p>${a.description}</p><a href="#book" class="btn">Записаться к ${a.dat} <i>→</i></a></div>`).join('');
+$('#faqList').innerHTML=faqItems.map((f,i)=>`<div class="it"><button aria-expanded="false" aria-controls="a${i}"><span>${f[0]}</span><span class="pl"></span></button><div class="an" id="a${i}"><div><p>${f[1]}</p></div></div></div>`).join('');
+document.querySelectorAll('.it button').forEach(b=>b.onclick=()=>{const it=b.parentElement,o=!it.classList.contains('o');
+ document.querySelectorAll('.it').forEach(x=>{x.classList.remove('o');x.firstChild.setAttribute('aria-expanded','false')});
+ if(o){it.classList.add('o');b.setAttribute('aria-expanded','true')}});
+/* ---------- NAV / MENU ---------- */
+const nav=$('#nav'),menu=$('#menu');
+const onS=()=>nav.classList.toggle('s',scrollY>40);addEventListener('scroll',onS,{passive:true});onS();
+const tm=o=>{menu.classList.toggle('o',o);document.body.classList.toggle('lock',o);$('#burger').setAttribute('aria-expanded',o)};
+$('#burger').onclick=()=>tm(true);$('#mx').onclick=()=>tm(false);menu.querySelectorAll('a').forEach(a=>a.onclick=()=>tm(false));
+/* ---------- HERO ---------- */
+requestAnimationFrame(()=>setTimeout(()=>$('#hero').classList.add('in'),150));
+/* ---------- REVEAL ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+/* ---------- MODALS ---------- */
+let cur=0,open=null,lastFocus;
+const md=$('#md'),pr=$('#pr');
+function showWork(i){cur=(i+works.length)%works.length;const w=works[cur];
+ $('#mdIn').innerHTML=`<div class="im">${media(w.image,w.title+' — '+w.category,cur,'Заглушка '+w.id)}</div>
+ <div><p class="lab">${String(cur+1).padStart(2,'0')} / ${String(works.length).padStart(2,'0')}</p><h3>${w.title}</h3><p class="ser" style="font-size:24px;line-height:1.2">${w.category}</p>
+ <p style="margin-top:20px">${w.description}</p><div class="meta">Мастер: ${w.artist}<br>Год: ${w.year}</div>
+ <div class="nv"><button data-n="-1">← Назад</button><button data-n="1">Вперёд →</button></div></div>`}
+function openM(m){lastFocus=document.activeElement;open=m;m.classList.add('o');document.body.classList.add('lock');m.querySelector('.cl').focus()}
+function closeM(){if(!open)return;open.classList.remove('o');open=null;document.body.classList.remove('lock');lastFocus&&lastFocus.focus()}
+document.addEventListener('click',e=>{
+ const w=e.target.closest('.w');if(w){showWork(+w.dataset.i);openM(md);return}
+ const a=e.target.closest('.ac');if(a){showArtist(+a.dataset.a);openM(pr);return}
+ const n=e.target.closest('[data-n]');if(n){showWork(cur+ +n.dataset.n);return}
+ const pw=e.target.closest('[data-w]');if(pw){closeM();showWork(+pw.dataset.w);openM(md);return}
+ if(e.target.closest('[data-close]'))closeM();
+ if(e.target.closest('[data-book]'))closeM();
+});
+function showArtist(i){const a=artists[i],first=a.name.split(' ')[0];
+ $('#prIn').innerHTML=`<div class="im">${media(a.portrait,'Портрет: '+a.name,i+2,'Заглушка: портрет')}</div>
+ <div><p class="lab">${a.role}</p><h3 class="h2" style="font-size:clamp(36px,5vw,72px);margin:16px 0 20px">${a.name}</h3><p>${a.description}</p>
+ <p class="lab" style="margin-top:36px">Специализация</p><div class="sp">${a.specialties.map(s=>`<span>${s}</span>`).join('')}</div>
+ <p class="lab">Избранные работы</p><div class="pw">${a.works.map(id=>{const k=works.findIndex(w=>w.id===id),w=works[k];return `<button data-w="${k}" aria-label="${w.title}">${media(w.image,w.title,k,'')}</button>`}).join('')}</div>
+ <a href="#book" class="btn" data-book>Записаться к ${a.dat} <i>→</i></a></div>`}
+document.addEventListener('keydown',e=>{if(!open)return;
+ if(e.key==='Escape')closeM();
+ if(open===md){if(e.key==='ArrowLeft')showWork(cur-1);if(e.key==='ArrowRight')showWork(cur+1)}});
+let tx=null;md.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+md.addEventListener('touchend',e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>60)showWork(cur+(d<0?1:-1));tx=null});
+/* ---------- FORM ---------- */
+$('#bookForm').addEventListener('submit',e=>{e.preventDefault();const f=e.target,m=$('#msg');
+ const miss=['n','c','d'].filter(id=>!f.querySelector('#'+id).value.trim());
+ if(miss.length){m.style.color='var(--hi)';m.textContent='Пожалуйста, укажите имя, контакт и идею татуировки, чтобы мы могли вам ответить.';f.querySelector('#'+miss[0]).focus();return}
+ /* TODO: connect to your backend, Formspree, or Telegram bot here */
+ m.style.color='';m.className='ok';m.textContent='Заявка отправлена. Мы скоро свяжемся с вами.';f.reset()});
+</script>
+</body>
+</html>
