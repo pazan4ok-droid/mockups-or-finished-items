@@ -1,0 +1,1560 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Терапия // Local Bar</title>
+    <meta
+        name="description"
+        content="Терапия — локальный лофт-бар. Напитки, еда и атмосфера."
+    >
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        html {
+        scroll-behavior: smooth !important; /* Плавный долет до секций по клику на кнопки */
+    }
+        /* =========================================================
+           DESIGN TOKENS
+        ========================================================= */
+
+        :root {
+            --bg-charcoal: #111113;
+            --bg-steel: #1A1A1D;
+            --bg-steel-light: #232326;
+
+            --terracotta: #8B1E1E;
+            --terracotta-bright: #a92727;
+
+            --text-main: #F2F0ED;
+            --text-muted: #9D9A96;
+
+            --bulb: #FFAA44;
+
+            --font-display: "Bebas Neue", sans-serif;
+            --font-body: "Montserrat", sans-serif;
+
+            --container: 1180px;
+            --radius: 4px;
+
+            --section-padding: clamp(72px, 9vw, 130px);
+        }
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-charcoal);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        textarea {
+            font: inherit;
+        }
+
+        ::selection {
+            background: var(--terracotta);
+            color: var(--text-main);
+        }
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        .container {
+            width: min(100% - 40px, var(--container));
+            margin-inline: auto;
+        }
+
+        .section {
+            padding-block: var(--section-padding);
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            margin-bottom: 14px;
+
+            color: var(--terracotta);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .section-label::before {
+            content: "";
+            width: 28px;
+            height: 1px;
+            background: var(--terracotta);
+        }
+
+        .section-title {
+            margin: 0 0 44px;
+
+            font-family: var(--font-display);
+            font-size: clamp(48px, 7vw, 82px);
+            font-weight: 400;
+            line-height: 0.9;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            position: relative;
+            min-height: 100svh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+            isolation: isolate;
+
+            background:
+                radial-gradient(
+                    ellipse at 50% -10%,
+                    rgba(139, 30, 30, 0.08),
+                    transparent 48%
+                ),
+                var(--bg-charcoal);
+        }
+
+        /* Subtle atmospheric glow */
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+
+            background:
+                radial-gradient(
+                    circle at 50% 38%,
+                    rgba(255, 170, 68, 0.035),
+                    transparent 34%
+                );
+
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           EDISON BULBS
+        ========================================================= */
+
+        .bulbs {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 180px;
+
+            pointer-events: none;
+        }
+
+        .bulb {
+            position: absolute;
+            top: -4px;
+
+            width: 9px;
+            height: 15px;
+
+            border-radius: 50%;
+
+            background: #ffd18a;
+
+            box-shadow:
+                0 0 5px 2px var(--bulb),
+                0 0 18px 7px rgba(255, 170, 68, 0.75),
+                0 0 55px 18px rgba(255, 170, 68, 0.25),
+                0 0 110px 40px rgba(255, 170, 68, 0.08);
+
+            filter: blur(0.2px);
+            animation: bulbPulse 4s ease-in-out infinite;
+        }
+
+        .bulb::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+
+            width: 1px;
+            height: 105px;
+
+            background: rgba(242, 240, 237, 0.22);
+
+            transform: translateX(-50%);
+        }
+
+        .bulb:nth-child(1) {
+            left: 8%;
+            animation-delay: -1.2s;
+        }
+
+        .bulb:nth-child(2) {
+            left: 22%;
+            top: 32px;
+            animation-delay: -2.5s;
+        }
+
+        .bulb:nth-child(3) {
+            left: 38%;
+            top: 8px;
+            animation-delay: -0.8s;
+        }
+
+        .bulb:nth-child(4) {
+            left: 52%;
+            top: 38px;
+            animation-delay: -3.1s;
+        }
+
+        .bulb:nth-child(5) {
+            left: 67%;
+            top: 14px;
+            animation-delay: -1.8s;
+        }
+
+        .bulb:nth-child(6) {
+            left: 82%;
+            top: 45px;
+            animation-delay: -2.1s;
+        }
+
+        .bulb:nth-child(7) {
+            left: 94%;
+            top: 5px;
+            animation-delay: -0.3s;
+        }
+
+        @keyframes bulbPulse {
+            0%,
+            100% {
+                opacity: 0.85;
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow:
+                    0 0 7px 3px var(--bulb),
+                    0 0 25px 10px rgba(255, 170, 68, 0.8),
+                    0 0 65px 24px rgba(255, 170, 68, 0.3),
+                    0 0 130px 50px rgba(255, 170, 68, 0.09);
+            }
+        }
+
+        /* =========================================================
+           HERO CONTENT
+        ========================================================= */
+
+        .hero-content {
+            width: min(100% - 40px, 1000px);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            transform: translateY(-2vh);
+        }
+
+        .hero-kicker {
+            margin: 0 0 14px;
+
+            color: var(--text-muted);
+
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+        }
+
+        .hero-logo {
+            margin: 0;
+
+            font-family: var(--font-display);
+            font-size: clamp(88px, 18vw, 230px);
+            font-weight: 400;
+            line-height: 0.78;
+            letter-spacing: 0.08em;
+
+            color: var(--text-main);
+
+            text-shadow:
+                0 0 30px rgba(242, 240, 237, 0.025);
+        }
+
+        .hero-subtitle {
+            margin: 28px 0 0;
+
+            color: var(--text-muted);
+
+            font-size: clamp(11px, 1.4vw, 14px);
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            
+            margin: 28px 0 0;
+
+            color: var(--text-muted);
+
+            font-size: clamp(11px, 1.4vw, 14px);
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 190px;
+            min-height: 52px;
+
+            margin-top: 44px;
+            padding: 14px 28px;
+
+            border: 1px solid var(--terracotta);
+            border-radius: 2px;
+
+            background: var(--terracotta);
+            color: var(--text-main);
+
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+
+            cursor: pointer;
+
+            transition:
+                background 180ms ease,
+                border-color 180ms ease,
+                transform 180ms ease,
+                box-shadow 180ms ease;
+        }
+
+        .hero-cta:hover {
+            background: var(--terracotta-bright);
+            border-color: var(--terracotta-bright);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 28px rgba(139, 30, 30, 0.28);
+        }
+
+        /* =========================================================
+           BLOCK 2 — DRINKS MENU
+        ========================================================= */
+
+        .drinks-section {
+            background: var(--bg-charcoal);
+        }
+
+        .drinks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .drink-card {
+            position: relative;
+
+            min-height: 190px;
+            padding: 28px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            background: var(--bg-steel);
+
+            border: 1px solid rgba(139, 30, 30, 0.45);
+            border-radius: var(--radius);
+
+            overflow: hidden;
+
+            transition:
+                transform 200ms ease,
+                border-color 200ms ease,
+                box-shadow 200ms ease,
+                background 200ms ease;
+        }
+
+        .drink-card::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                radial-gradient(
+                    circle at 100% 0%,
+                    rgba(139, 30, 30, 0.08),
+                    transparent 35%
+                );
+
+            pointer-events: none;
+        }
+
+        .drink-card:hover {
+            transform: translateY(-2px);
+
+            border-color: var(--terracotta);
+
+            background: var(--bg-steel-light);
+
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.25),
+                0 0 18px rgba(139, 30, 30, 0.15);
+        }
+
+        .drink-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .drink-category {
+            margin-bottom: 12px;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .drink-name {
+            margin: 0;
+
+            color: var(--text-main);
+
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 400;
+            line-height: 1;
+
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .drink-description {
+            max-width: 520px;
+
+            margin: 9px 0 0;
+
+            color: var(--text-muted);
+
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .drink-bottom {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 20px;
+            margin-top: 26px;
+        }
+
+        .drink-volume {
+            color: var(--text-muted);
+
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        .drink-price {
+            color: var(--terracotta);
+
+            font-family: var(--font-display);
+            font-size: 31px;
+            font-weight: 400;
+            line-height: 1;
+
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           BLOCK 3 — KITCHEN / FOOD
+        ========================================================= */
+
+        .food-section {
+            background: var(--bg-steel);
+        }
+
+        .food-list {
+            display: flex;
+            flex-direction: column;
+
+            border-top: 1px solid rgba(242, 240, 237, 0.12);
+        }
+
+        .food-row {
+            display: grid;
+            grid-template-columns: auto minmax(30px, 1fr) auto;
+            align-items: baseline;
+
+            gap: 12px;
+
+            padding: 18px 0;
+
+            border-bottom: 1px solid rgba(242, 240, 237, 0.08);
+        }
+
+        .food-name {
+            margin: 0;
+
+            color: var(--text-main);
+
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .food-dots {
+            min-width: 30px;
+            height: 1px;
+
+            background-image:
+                radial-gradient(
+                    circle,
+                    rgba(242, 240, 237, 0.35) 1px,
+                    transparent 1px
+                );
+
+            background-repeat: repeat-x;
+            background-size: 5px 1px;
+            background-position: center;
+        }
+
+        .food-price {
+            color: var(--terracotta);
+
+            font-family: var(--font-display);
+            font-size: 25px;
+            font-weight: 400;
+            line-height: 1;
+
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           BLOCK 4 — FOOTER
+        ========================================================= */
+
+        .footer {
+            padding-block: 72px 30px;
+
+            background: var(--bg-charcoal);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+            gap: 64px;
+        }
+
+        .footer-title {
+            margin: 0 0 28px;
+
+            color: var(--text-main);
+
+            font-family: var(--font-display);
+            font-size: 54px;
+            font-weight: 400;
+            line-height: 0.9;
+
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+
+            margin: 0;
+            padding: 0;
+
+            list-style: none;
+        }
+
+        .contact-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--text-muted);
+
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .contact-value {
+            color: var(--text-main);
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: color 180ms ease;
+        }
+
+        a.contact-value:hover {
+            color: var(--terracotta);
+        }
+
+        /* Map placeholder */
+
+        .map {
+            position: relative;
+
+            min-height: 290px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(139, 30, 30, 0.55);
+            border-radius: var(--radius);
+
+            background-color: var(--bg-steel);
+
+            background-image:
+                linear-gradient(
+                    115deg,
+                    transparent 48%,
+                    rgba(242, 240, 237, 0.055) 49%,
+                    transparent 50%
+                ),
+                linear-gradient(
+                    35deg,
+                    transparent 47%,
+                    rgba(242, 240, 237, 0.04) 48%,
+                    transparent 49%
+                ),
+                linear-gradient(
+                    90deg,
+                    transparent 49.5%,
+                    rgba(139, 30, 30, 0.08) 50%,
+                    transparent 50.5%
+                );
+        }
+
+        .map::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                radial-gradient(
+                    circle at 50% 50%,
+                    rgba(139, 30, 30, 0.12),
+                    transparent 35%
+                );
+
+            pointer-events: none;
+        }
+
+        .map-inner {
+            position: relative;
+            z-index: 1;
+
+            text-align: center;
+        }
+
+        .map-pin {
+            position: relative;
+
+            width: 30px;
+            height: 30px;
+
+            margin: 0 auto 14px;
+
+            border: 1px solid var(--terracotta);
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 18px rgba(139, 30, 30, 0.2);
+        }
+
+        .map-pin::after {
+            content: "";
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+            background: var(--terracotta);
+
+            transform: translate(-50%, -50%);
+        }
+
+        .map-text {
+            margin: 0;
+
+            color: var(--text-muted);
+
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-top: 70px;
+            padding-top: 22px;
+
+            border-top: 1px solid rgba(242, 240, 237, 0.08);
+
+            color: var(--text-muted);
+
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 800px) {
+
+            .container {
+                width: min(100% - 32px, var(--container));
+            }
+
+            .drinks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 44px;
+            }
+
+            .map {
+                min-height: 250px;
+            }
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 560px) {
+
+            .container {
+                width: min(100% - 24px, var(--container));
+            }
+
+            .section {
+                padding-block: 72px;
+            }
+
+            .section-title {
+                margin-bottom: 30px;
+            }
+
+            .hero-content {
+                width: calc(100% - 32px);
+            }
+
+            .hero-kicker {
+                font-size: 9px;
+                letter-spacing: 0.2em;
+            }
+
+            .hero-logo {
+                font-size: clamp(70px, 22vw, 130px);
+                letter-spacing: 0.08em;
+            }
+
+            .hero-subtitle {
+                max-width: 290px;
+
+                margin-top: 22px;
+
+                font-size: 9px;
+                line-height: 1.7;
+                letter-spacing: 0.2em;
+            }
+
+            .hero-cta {
+                width: 100%;
+                max-width: 230px;
+
+                margin-top: 34px;
+            }
+
+            .bulbs {
+                height: 140px;
+            }
+
+            .bulb:nth-child(1) {
+                left: 5%;
+            }
+
+            .bulb:nth-child(2) {
+                left: 25%;
+            }
+
+            .bulb:nth-child(3) {
+                left: 45%;
+            }
+
+            .bulb:nth-child(4) {
+                left: 65%;
+            }
+
+            .bulb:nth-child(5) {
+                left: 85%;
+            }
+
+            .bulb:nth-child(6),
+            .bulb:nth-child(7) {
+                display: none;
+            }
+
+            .drink-card {
+                min-height: 175px;
+                padding: 22px;
+            }
+
+            .drink-name {
+                font-size: 29px;
+            }
+
+            .drink-description {
+                font-size: 11px;
+            }
+
+            .food-row {
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 8px;
+            }
+
+            .food-dots {
+                display: none;
+            }
+
+            .food-name {
+                font-size: 11px;
+            }
+
+            .food-price {
+                font-size: 22px;
+            }
+
+            .footer {
+                padding-top: 60px;
+            }
+
+            .footer-title {
+                font-size: 44px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+
+                margin-top: 50px;
+            }
+
+            .map {
+                min-height: 220px;
+            }
+        }
+
+        /* =========================================================
+           TOUCH DEVICES
+        ========================================================= */
+
+        @media (hover: none) {
+
+            .drink-card:hover {
+                transform: none;
+
+                border-color: rgba(139, 30, 30, 0.45);
+
+                background: var(--bg-steel);
+
+                box-shadow: none;
+            }
+
+            .hero-cta:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+       /* =========================================================
+   ФИКС ЦВЕТА КНОПОК ОТ СЕРЕГИ
+========================================================= */
+.btn-primary, .btn-ghost {
+    display: inline-block !important;
+    padding: 16px 36px !important;
+    font-family: "Montserrat", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    border-radius: 2px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Красим первую кнопку (Барная карта) */
+.btn-primary {
+    background: #8B1E1E !important;
+    color: #F2F0ED !important;
+    border: 1px solid #8B1E1E !important;
+}
+.btn-primary:hover {
+    background: #A62424 !important;
+    box-shadow: 0 0 20px rgba(139, 30, 30, 0.6) !important;
+}
+
+/* Красим вторую контурную кнопку (Меню кухни) */
+.btn-ghost {
+    background: transparent !important;
+    color: #F2F0ED !important;
+    border: 1px solid #2E2E31 !important;
+}
+.btn-ghost:hover {
+    border-color: #8B1E1E !important;
+    box-shadow: 0 0 15px rgba(139, 30, 30, 0.2) !important;
+}
+ /* =========================================================
+   АДАПТИВНЫЙ ФИКС ЛОГОТИПА ДЛЯ МОБИЛОК ОТ СЕРЕГИ
+========================================================= */
+@media (max-width: 480px) {
+    .hero-logo {
+        font-size: 54px !important;    /* Слегка уменьшаем размер букв */
+        letter-spacing: 4px !important; /* Сужаем расстояние между буквами, чтобы не вылезало */
+        line-height: 1.1 !important;
+    }
+    .hero-subtitle {
+        letter-spacing: 3px !important; /* Делаем подзаголовок тоже компактнее */
+        padding-inline: 10px;
+    }
+}
+
+        .legal-text { 
+            text-align: center; 
+            font-size: 12px; 
+            color: #555; 
+            margin-top: 40px; 
+            border-top: 1px solid rgba(255,255,255,0.02); 
+            padding-top: 20px; 
+        }
+
+        /* =========================================================
+           АНАТОМИЧЕСКИЕ ПОСТЕРЫ ПО КРАЯМ САЙТА (СТИЛЬ ТЕРАПИИ)
+        ========================================================= */
+        .anatomy-poster {
+            position: fixed; /* Скелеты намертво зафиксированы по бокам при скролле */
+            /* 🎯 НАШ МИКРОФИКС: прижимаем скелетов ближе к верхнему краю, чтобы череп и рука были в фокусе */
+            top: 15vh;       
+            transform: none; 
+            
+            height: 90vh;    /* Делаем их крупнее и монументальнее, ноги сами уйдут вниз за экран */
+            width: auto;
+            opacity: 0.12;   /* Делаем их слегка заметными призраками, чтобы не мешали читать меню */
+            z-index: 1;      /* Лежат строго за текстом, но поверх темного фона */
+            pointer-events: none; /* Мышка кликает насквозь */
+            user-select: none;
+        }
+
+        .anatomy-left {
+            left: -20px;     /* Слегка прячем за левый край экрана */
+        }
+
+        .anatomy-right {
+            right: -20px;    
+            /* 🎯 Зеркальное отражение для правой стороны */
+            transform: scaleX(-1); 
+        }
+
+        /* 📱 МОБИЛЬНЫЙ ФИКС: На смартфонах убираем скелетов полностью, 
+           чтобы на узком экране они не превратили меню в кашу! */
+        /* 📱 ОБНОВЛЕННЫЙ МОБИЛЬНЫЙ ФИКС: Оставляем одного скелета для телефонов */
+/* 📱 МОБИЛЬНЫЙ ФИКС: Динамичный скелет справа */
+@media (max-width: 1100px) {
+    /* Намертво скрываем тяжелых десктопных скелетов */
+    .anatomy-left, .anatomy-right {
+        display: none !important;
+    }
+    
+    /* 🎯 Позиционируем летящего скелета строго справа */
+    #anatomy-mobile {
+        display: block !important;
+        position: absolute; /* Пускай плавно уходит под скролл при прокрутке меню */
+        right: -30px;       /* Слегка прячем за правый край телефона для объема */
+        left: auto;
+        top: 18vh;          /* Череп встает ровно на уровне ламп и логотипа ТЕРАПИЯ */
+        transform: none;
+        height: 55vh;       /* Мощный размер, чтобы рука красиво дотягивалась до верха */
+        width: auto;
+        opacity: 0.09;      /* Легкий, благородный лофт-призрак на заднем плане */
+        z-index: 1;         /* Строго за текстом и кнопками */
+    }
+}
+
+/* Скрываем мобильного скелета на больших экранах ПК */
+@media (min-width: 1101px) {
+    #anatomy-mobile {
+        display: none !important;
+    }
+}
+
+
+    </style>
+
+</head>
+<body>
+    <img src="skeleton.png" class="anatomy-poster anatomy-left" alt="" aria-hidden="true">
+<img src="skeleton.png" class="anatomy-poster anatomy-right" alt="" aria-hidden="true">
+<img src="skeleton2.png" class="anatomy-poster" id="anatomy-mobile" alt="" aria-hidden="true">
+    <!-- =========================================================
+         BLOCK 1 — HERO
+    ========================================================= -->
+
+    <header class="hero" id="top">
+
+        <!-- Warm Edison bulbs -->
+        <div class="bulbs" aria-hidden="true">
+            <span class="bulb"></span>
+            <span class="bulb"></span>
+            <span class="bulb"></span>
+            <span class="bulb"></span>
+            <span class="bulb"></span>
+            <span class="bulb"></span>
+            <span class="bulb"></span>
+        </div>
+
+        <div class="hero-content">
+
+            <p class="hero-kicker">
+                Local Bar // Since 2019
+            </p>
+
+            <h1 class="hero-logo">
+                ТЕРАПИЯ
+            </h1>
+
+            <p class="hero-subtitle">
+                Лофт-бар для тех, кому нужно немного терапии
+            </p>
+
+           <!-- 👇 ТВОЙ ОБНОВЛЕННЫЙ БЛОК КНОПОК -->
+            <div class="hero-buttons-group">
+                <a href="#drinks" class="btn-primary">Барная карта</a>
+                <a href="#kitchen" class="btn-ghost">Меню кухни</a>
+            </div>
+
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- =====================================================
+             BLOCK 2 — DRINKS MENU
+        ====================================================== -->
+
+        <section class="section drinks-section" id="drinks">
+
+            <div class="container">
+
+                <div class="section-label">
+                    Bar Menu
+                </div>
+
+                <h2 class="section-title">
+                    Напитки
+                </h2>
+
+                <div class="drinks-grid">
+
+                    <article class="drink-card">
+
+                        <div>
+                            <div class="drink-category">
+                                Cocktail
+                            </div>
+
+                            <h3 class="drink-name">
+                                Тёмная терапия
+                            </h3>
+
+                            <p class="drink-description">
+                                Пряный ром, вишня, цитрус и лёгкая горечь.
+                            </p>
+                        </div>
+
+                        <div class="drink-bottom">
+
+                            <span class="drink-volume">
+                                250 ML
+                            </span>
+
+                            <span class="drink-price">
+                                650 ₽
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="drink-card">
+
+                        <div>
+                            <div class="drink-category">
+                                Cocktail
+                            </div>
+
+                            <h3 class="drink-name">
+                                Красная линия
+                            </h3>
+
+                            <p class="drink-description">
+                                Джин, ягоды, тоник и свежая мята.
+                            </p>
+                        </div>
+
+                        <div class="drink-bottom">
+
+                            <span class="drink-volume">
+                                300 ML
+                            </span>
+
+                            <span class="drink-price">
+                                590 ₽
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="drink-card">
+
+                        <div>
+                            <div class="drink-category">
+                                Classic
+                            </div>
+
+                            <h3 class="drink-name">
+                                Negroni
+                            </h3>
+
+                            <p class="drink-description">
+                                Классический микс с характерной горчинкой.
+                            </p>
+                        </div>
+
+                        <div class="drink-bottom">
+
+                            <span class="drink-volume">
+                                100 ML
+                            </span>
+
+                            <span class="drink-price">
+                                620 ₽
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="drink-card">
+
+                        <div>
+                            <div class="drink-category">
+                                Non-Alcoholic
+                            </div>
+
+                            <h3 class="drink-name">
+                                Тихий вечер
+                            </h3>
+
+                            <p class="drink-description">
+                                Вишня, имбирь, цитрус и газированная вода.
+                            </p>
+                        </div>
+
+                        <div class="drink-bottom">
+
+                            <span class="drink-volume">
+                                300 ML
+                            </span>
+
+                            <span class="drink-price">
+                                350 ₽
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BLOCK 3 — KITCHEN
+        ====================================================== -->
+
+        <section class="section kithcen-section" id="kitchen">
+
+            <div class="container">
+
+                <div class="section-label">
+                    Kitchen
+                </div>
+
+                <h2 class="section-title">
+                    Еда
+                </h2>
+
+                <div class="food-list">
+
+                    <div class="food-row">
+
+                        <h3 class="food-name">
+                            Картофель по-деревенски
+                        </h3>
+
+                        <span
+                            class="food-dots"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="food-price">
+                            320 ₽
+                        </span>
+
+                    </div>
+
+
+                    <div class="food-row">
+
+                        <h3 class="food-name">
+                            Крылья BBQ
+                        </h3>
+
+                        <span
+                            class="food-dots"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="food-price">
+                            490 ₽
+                        </span>
+
+                    </div>
+
+
+                    <div class="food-row">
+
+                        <h3 class="food-name">
+                            Сырные шарики
+                        </h3>
+
+                        <span
+                            class="food-dots"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="food-price">
+                            390 ₽
+                        </span>
+
+                    </div>
+
+
+                    <div class="food-row">
+
+                        <h3 class="food-name">
+                            Брускетта с ростбифом
+                        </h3>
+
+                        <span
+                            class="food-dots"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="food-price">
+                            520 ₽
+                        </span>
+
+                    </div>
+
+
+                    <div class="food-row">
+
+                        <h3 class="food-name">
+                            Бургер «Терапия»
+                        </h3>
+
+                        <span
+                            class="food-dots"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="food-price">
+                            690 ₽
+                        </span>
+
+                    </div>
+
+
+                    <div class="food-row">
+
+                        <h3 class="food-name">
+                            Шоколадный брауни
+                        </h3>
+
+                        <span
+                            class="food-dots"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="food-price">
+                            340 ₽
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         BLOCK 4 — FOOTER / CONTACTS
+    ========================================================= -->
+
+    <footer class="footer" id="contacts">
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <!-- Contacts -->
+
+                <div class="footer-contacts">
+
+                    <div class="section-label">
+                        Find Us
+                    </div>
+
+                    <h2 class="footer-title">
+                        Терапия
+                    </h2>
+
+                    <ul class="contact-list">
+
+                        <li>
+                            <span class="contact-label">
+                                Address
+                            </span>
+
+                            <a
+                                class="contact-value"
+                                href="#"
+                            >
+                                Санкт-Петербург, Комендантский просп., 58, корп. 1
+                            </a>
+                        </li>
+
+
+                        <li>
+                            <span class="contact-label">
+                                Phone
+                            </span>
+
+                            <a
+                                class="contact-value"
+                                href="tel:+79990000000"
+                            >
+                                +7 999 000 00-00
+                            </a>
+                        </li>
+
+
+                        <li>
+                            <span class="contact-label">
+                                Hours
+                            </span>
+
+                            <span class="contact-value">
+                                Каждый день · 16:00 — 01:00
+                            </span>
+                        </li>
+
+
+                        <li>
+                            <span class="contact-label">
+                                Social
+                            </span>
+
+                            <a
+                                class="contact-value"
+                                href="#"
+                            >
+                                @therapy.local
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Map -->
+
+                <div
+                    class="map"
+                    aria-label="Карта расположения бара"
+                >
+
+                    <div class="map-inner">
+
+                        <div
+                            class="map-pin"
+                            aria-hidden="true"
+                        ></div>
+
+                        <p class="map-text">
+                            Map Placeholder
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer bottom -->
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 Терапия // Local Bar
+                </span>
+
+                <span>
+                    Made for good nights
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+    
+
+</body>
+</html>
+```
+        
