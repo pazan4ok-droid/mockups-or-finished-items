@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0C0F">
 <title>Obsidiaudio — голосовой интеллект</title>
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&family=Oswald:wght@400;500&display=swap">
@@ -508,5 +509,15 @@ const App = {
 App.init();
 })();
 </script>
+<script>
+    // Регистрация микро-сервис-воркера для разблокировки PWA-установки на Android
+    if ('serviceWorker' in navigator) {
+        const swCode = "self.addEventListener('fetch', function(event) {});";
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error:', err));
+    }
+</script>
+
 </body>
 </html>
